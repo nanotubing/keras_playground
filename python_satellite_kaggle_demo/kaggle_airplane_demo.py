@@ -160,7 +160,7 @@ PATIENCE = 10
 early_stopping = EarlyStopping(monitor='loss', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
 
 # TensorBoard callback
-LOG_DIRECTORY_ROOT = ''
+LOG_DIRECTORY_ROOT = '.'
 now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
 log_dir = "{}/run-{}/".format(LOG_DIRECTORY_ROOT, now)
 tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
