@@ -17,6 +17,7 @@ from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling
 from keras.callbacks import EarlyStopping, TensorBoard
 from sklearn.metrics import accuracy_score, f1_score
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 # IMAGE_PATH should be the path to the downloaded planesnet folder
 IMAGE_PATH = '/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/planesnet/planesnet'
@@ -170,3 +171,42 @@ callbacks = [early_stopping, tensorboard]
 
 # Train the model
 model.fit(x_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, verbose=0)
+
+#load the model
+#model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
+
+#save the model
+model.save('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')  
+
+# Make a prediction on the test set
+test_predictions = model.predict(x_test)
+test_predictions = np.round(test_predictions)
+# Report the accuracy
+accuracy = accuracy_score(y_test, test_predictions)
+print("Accuracy: " + str(accuracy))
+
+
+def visualize_incorrect_labels(x_data, y_real, y_predicted):
+    # INPUTS
+    # x_data      - images
+    # y_data      - ground truth labels
+    # y_predicted - predicted label
+    count = 0
+    figure = plt.figure()
+    incorrect_label_indices = (y_real != y_predicted)
+    y_real = y_real[incorrect_label_indices]
+    y_predicted = y_predicted[incorrect_label_indices]
+    x_data = x_data[incorrect_label_indices, :, :, :]
+
+    maximum_square = np.ceil(np.sqrt(x_data.shape[0]))
+
+    for i in range(x_data.shape[0]):
+        count += 1
+        figure.add_subplot(maximum_square, maximum_square, count)
+        plt.imshow(x_data[i, :, :, :])
+        plt.axis('off')
+        plt.title("Predicted: " + str(int(y_predicted[i])) + ", Real: " + str(int(y_real[i])), fontsize=10)
+
+    plt.show()
+
+visualize_incorrect_labels(x_test, y_test, np.asarray(test_predictions).ravel())
