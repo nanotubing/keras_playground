@@ -29,25 +29,14 @@ os.listdir(IMAGE_PATH)
 
 train_paths = glob.glob(os.path.join(IMAGE_PATH, "train-tif-v2", "*.tif"))
 train_img = [plt.imread(image) for image in train_paths]
+del train_paths
+train_img = np.asarray(train_img)
+
 
 test_paths = glob.glob(os.path.join(IMAGE_PATH, "test-tif-v2", "*.tif"))
 test_img = [plt.imread(image) for image in test_paths]
-
-
-#    train_images = plt.imread(image)
-
-images-test = misc.imread(train_paths)
-
-train_paths = np.asarray(train_paths)
-test_paths = np.asarray(test_paths)
-
-
-for i in ["train", "test"]:
-    
-    print(i + "-tif-v2")
-    i-images = [misc.imread(path) for path in file_paths]
-    images = np.asarray(images)
-    print()
+del test_paths
+test_img = np.asarray(test_img)
 
 
 #file_paths = glob.glob(path.join(IMAGE_PATH, '*.tif'))
