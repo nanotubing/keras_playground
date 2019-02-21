@@ -8,9 +8,9 @@ This is a temporary script file.
 # Imports
 import glob
 import numpy as np
-import os.path as path
-import os, sys
-from scipy import misc
+#import os.path as path
+import os#, sys
+#from scipy import misc
 import matplotlib.pyplot as plt
 # keras imports
 from keras.models import Sequential
@@ -18,39 +18,37 @@ from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling
 from keras.callbacks import EarlyStopping, TensorBoard
 #from sklearn.metrics import accuracy_score, f1_score
 from datetime import datetime
-import matplotlib.pyplot as plt
 
 # IMAGE_PATH should be the path to the downloaded amazon tiles in data folder
+#this is necessary developing scripts interactively in the IDE
+os.chdir(r"C:\Users\tuj53509\Documents\GitHub\keras_playground\data")
 os.chdir("..\data")
-#print(os.getcwd())
+print(os.getcwd())
 IMAGE_PATH = str(os.getcwd()) + "\planet_amazon"
 print(IMAGE_PATH)
 os.listdir(IMAGE_PATH)
 
+#generate a list of all tif images in the training directory
 train_paths = glob.glob(os.path.join(IMAGE_PATH, "train-tif-v2", "*.tif"))
-train_img = [plt.imread(image) for image in train_paths]
+#read in each tif into a numpy array, and throw all of them in a big numpy array
+#divide by 255 to rescale RGB values between 0 and 1. this allows the training
+#to finish in our lifetimes
+#only reading in the first 1000 images for memory reasons
+#alternately, could use imagedatagenerator to train in batches
+train_img = np.asarray([plt.imread(image)/255 for image in train_paths[:1000]])
 del train_paths
-train_img = np.asarray(train_img)
-
+#no longer necessary bc I moved it into command above
+#train_img = np.asarray(train_img)
 
 test_paths = glob.glob(os.path.join(IMAGE_PATH, "test-tif-v2", "*.tif"))
-test_img = [plt.imread(image) for image in test_paths]
+test_img = np.asarray([plt.imread(image)/255 for image in test_paths[:1000]])
 del test_paths
-test_img = np.asarray(test_img)
+
+# Get image size
+train_image_size = np.asarray([train_img.shape[1], train_img.shape[2], train_img.shape[3]])
+test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.shape[3]])
 
 
-#file_paths = glob.glob(path.join(IMAGE_PATH, '*.tif'))
-## Load the images
-#images = [misc.imread(path) for path in file_paths]
-#images = np.asarray(images)
-#
-## Get image size
-#image_size = np.asarray([images.shape[1], images.shape[2], images.shape[3]])
-#print(image_size)
-#
-## Scale
-#images = images / 255
-#
 ## Read the labels from the filenames
 #n_images = images.shape[0]
 #labels = np.zeros(n_images)
