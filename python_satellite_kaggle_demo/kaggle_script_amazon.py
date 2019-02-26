@@ -60,21 +60,20 @@ for l in range(len(labels_df)):
     temp = labels_df.loc[l][1].split()
     temp.insert(0, l)
     labels_df2.append(temp)
-labels_df3 = pd.DataFrame(labels_df2)
+del temp
+labels_df2 = pd.DataFrame(labels_df2)
 #labels_df3.set_index(0, inplace = True)
-labels_df3.head()
+labels_df2.head()
 
 #create training and validation sets based on an 80/20 split
 split_size = 0.2
-split_index = round(split_size * len(labels_df3.index))
-shuffled_indices = pd.DataFrame(np.random.permutation(labels_df3))
+split_index = round(split_size * len(labels_df2.index))
+shuffled_indices = pd.DataFrame(np.random.permutation(labels_df2))
 shuffled_indices.set_index(0, inplace = True)
 shuffled_indices.head()
 training_indices = shuffled_indices[0:split_index]
 test_indices = shuffled_indices[split_index:]
 
-
-#
 ## Split the images and the labels
 #x_train = images[train_indices, :, :]
 #y_train = labels[train_indices]
