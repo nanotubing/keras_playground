@@ -74,6 +74,9 @@ shuffled_indices.head()
 training_indices = shuffled_indices[0:split_index]
 test_indices = shuffled_indices[split_index:]
 
+x_train = 
+
+
 ## Split the images and the labels
 #x_train = images[train_indices, :, :]
 #y_train = labels[train_indices]
