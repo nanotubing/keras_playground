@@ -9,11 +9,8 @@ This is a temporary script file.
 # Imports
 import glob
 import numpy as np
-#import os.path as path
 import os#, sys
 import pandas as pd
-
-#from scipy import misc
 import matplotlib.pyplot as plt
 # keras imports
 from keras.models import Sequential
@@ -79,20 +76,7 @@ del all_labels
 train_image_size = np.asarray([train_img.shape[1], train_img.shape[2], train_img.shape[3]])
 test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.shape[3]])
 
-#load labels
-#labels_df = pd.read_csv(r".\planet_amazon\train_v2.csv")
-#labels_df.head()
-#
-#labels_df2 = []
-#for l in range(len(labels_df)):
-#    temp = labels_df.loc[l][1].split()
-#    temp.insert(0, l)
-#    labels_df2.append(temp)
-del temp
-labels_df2 = pd.DataFrame(labels_df2)
-#labels_df3.set_index(0, inplace = True)
-labels_df2.head()
-
+#probably not needed 20190226
 #create training and validation sets based on an 80/20 split
 #split_size = 0.2
 #split_index = round(split_size * len(labels_df2.index))
@@ -101,10 +85,6 @@ labels_df2.head()
 #shuffled_indices.head()
 #training_indices = shuffled_indices[0:split_index]
 #test_indices = shuffled_indices[split_index:]
-
-x_train = train_img
-y_train = labels_df2.iloc[0:split_index]
-y_test = labels_df2.iloc[split_index:]
 
 for i in train_img:
     temp = 
