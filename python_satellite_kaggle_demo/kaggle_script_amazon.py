@@ -25,7 +25,7 @@ from datetime import datetime
 # IMAGE_PATH should be the path to the downloaded amazon tiles in data folder
 #this is necessary developing scripts interactively in the IDE
 os.chdir(r"C:\Users\tuj53509\Documents\GitHub\keras_playground\data")
-os.chdir("..\data")
+#os.chdir("..\data")
 print(os.getcwd())
 IMAGE_PATH = str(os.getcwd()) + "\planet_amazon"
 print(IMAGE_PATH)
@@ -38,44 +38,76 @@ train_paths = glob.glob(os.path.join(IMAGE_PATH, "train-tif-v2", "*.tif"))
 #to finish in our lifetimes
 #only reading in the first 1000 images for memory reasons
 #alternately, could use imagedatagenerator to train in batches
-train_img = np.asarray([plt.imread(image)/255 for image in train_paths[:1000]])
+
+all_labels = pd.read_csv(r".\planet_amazon\train_v2.csv")
+train_labels = []
+train_img = []
+for image in train_paths[:1000]:
+    tempimage = plt.imread(image)/255
+    tempimgno = os.path.split(image)[1]
+    tempimgno = os.path.splitext(tempimgno)[0]
+    tempimgno = int(tempimgno.split("_")[1])
+    templabel = all_labels.loc[tempimgno][1].split()
+    templabel.insert(0, tempimgno)
+    train_img.append(tempimage)
+    train_img = np.asarray(train_img)
+    train_labels.append(templabel)
+
+del tempimage, tempimgno, templabel, image
 del train_paths
-#no longer necessary bc I moved it into command above
-#train_img = np.asarray(train_img)
 
 test_paths = glob.glob(os.path.join(IMAGE_PATH, "test-tif-v2", "*.tif"))
-test_img = np.asarray([plt.imread(image)/255 for image in test_paths[:1000]])
+#test_img = np.asarray([plt.imread(image)/255 for image in test_paths[:1000]])
+test_labels = []
+test_img = []
+for image in test_paths[:1000]:
+    tempimage = plt.imread(image)/255
+    tempimgno = os.path.split(image)[1]
+    tempimgno = os.path.splitext(tempimgno)[0]
+    tempimgno = int(tempimgno.split("_")[1])
+    templabel = all_labels.loc[tempimgno][1].split()
+    templabel.insert(0, tempimgno)
+    test_img.append(tempimage)
+    test_img = np.asarray(test_img)
+    test_labels.append(templabel)
+del tempimage, tempimgno, templabel, image
 del test_paths
+
+del all_labels
 
 # Get image size
 train_image_size = np.asarray([train_img.shape[1], train_img.shape[2], train_img.shape[3]])
 test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.shape[3]])
 
 #load labels
-labels_df = pd.read_csv(r".\planet_amazon\train_v2.csv")
-labels_df.head()
-
-labels_df2 = []
-for l in range(len(labels_df)):
-    temp = labels_df.loc[l][1].split()
-    temp.insert(0, l)
-    labels_df2.append(temp)
+#labels_df = pd.read_csv(r".\planet_amazon\train_v2.csv")
+#labels_df.head()
+#
+#labels_df2 = []
+#for l in range(len(labels_df)):
+#    temp = labels_df.loc[l][1].split()
+#    temp.insert(0, l)
+#    labels_df2.append(temp)
 del temp
 labels_df2 = pd.DataFrame(labels_df2)
 #labels_df3.set_index(0, inplace = True)
 labels_df2.head()
 
 #create training and validation sets based on an 80/20 split
-split_size = 0.2
-split_index = round(split_size * len(labels_df2.index))
-shuffled_indices = pd.DataFrame(np.random.permutation(labels_df2))
-shuffled_indices.set_index(0, inplace = True)
-shuffled_indices.head()
-training_indices = shuffled_indices[0:split_index]
-test_indices = shuffled_indices[split_index:]
+#split_size = 0.2
+#split_index = round(split_size * len(labels_df2.index))
+#shuffled_indices = pd.DataFrame(np.random.permutation(labels_df2))
+#shuffled_indices.set_index(0, inplace = True)
+#shuffled_indices.head()
+#training_indices = shuffled_indices[0:split_index]
+#test_indices = shuffled_indices[split_index:]
 
-x_train = 
+x_train = train_img
+y_train = labels_df2.iloc[0:split_index]
+y_test = labels_df2.iloc[split_index:]
 
+for i in train_img:
+    temp = 
 
 ## Split the images and the labels
 #x_train = images[train_indices, :, :]
