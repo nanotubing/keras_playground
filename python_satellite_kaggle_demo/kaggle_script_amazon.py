@@ -4,12 +4,15 @@ Spyder Editor
 
 This is a temporary script file.
 """
+#https://github.com/EKami/planet-amazon-deforestation/blob/master/notebooks/amazon_forest_notebook_preview.ipynb
 
 # Imports
 import glob
 import numpy as np
 #import os.path as path
 import os#, sys
+import pandas as pd
+
 #from scipy import misc
 import matplotlib.pyplot as plt
 # keras imports
@@ -48,17 +51,26 @@ del test_paths
 train_image_size = np.asarray([train_img.shape[1], train_img.shape[2], train_img.shape[3]])
 test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.shape[3]])
 
+#load labels
+labels_df = pd.read_csv(r".\planet_amazon\train_v2.csv")
+labels_df.head()
 
-## Read the labels from the filenames
-#n_images = images.shape[0]
-#labels = np.zeros(n_images)
-#for i in range(n_images):
-#    filename = path.basename(file_paths[i])[0]
-#    labels[i] = int(filename[0])
+labels_df2 = []
+for l in range(len(labels_df)):
+    temp = labels_df.loc[l][1].split()
+    temp.insert(0, l)
+    labels_df2.append(temp)
+labels_df3 = pd.DataFrame(labels_df2)
+labels_df3.set_index(0, inplace = True)
+labels_df3.head()
 
+#create training and validation sets based on 80% and 20%
+split_size = 0.2
+split_index = round(split_size * len(labels_df3.index))
+shuffled_indices = np.random.permutation(labels_df3)
 
-## Split into test and training sets
-#TRAIN_TEST_SPLIT = 0.9
+for l in range(len(labels_df3)):
+    
 #
 ## Split at the given index
 #split_index = int(TRAIN_TEST_SPLIT * n_images)
