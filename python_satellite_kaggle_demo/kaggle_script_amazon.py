@@ -44,41 +44,44 @@ for i in train_paths_subset:
     train_img_no.append(int(os.path.splitext(os.path.split(i)[1])[0].split("_")[1]))
 train_img = []
 train_img = np.asarray([plt.imread(image)/255 for image in train_paths_subset])
-label_subset = 
+#label_subset = 
+#train_labels = []
+#train_labels = np.asarray([print(label) for label in train_img_no])
+
 train_labels = []
-train_labels = np.asarray([print(label) for label in train_img_no])
-
-
-for image in train_paths_subset:
-    tempimage = plt.imread(image)/255
-    tempimgno = os.path.split(image)[1]
-    tempimgno = os.path.splitext(tempimgno)[0]
-    tempimgno = int(tempimgno.split("_")[1])
-    templabel = all_labels.loc[tempimgno][1].split()
-    templabel.insert(0, tempimgno)
-    train_img = np.append(train_img, tempimage)
-    train_labels = np.append(train_labels, templabel)
-train_img = np.asarray(train_img)
-del tempimage, tempimgno, templabel, image
+for i in train_img_no:
+    print(i)
+    train_labels.append(all_labels.iloc[i]['tags'].split(' '))
+    
+#for image in train_paths_subset:
+#    tempimage = plt.imread(image)/255
+#    tempimgno = os.path.split(image)[1]
+#    tempimgno = os.path.splitext(tempimgno)[0]
+#    tempimgno = int(tempimgno.split("_")[1])
+#    templabel = all_labels.loc[tempimgno][1].split()
+#    templabel.insert(0, tempimgno)
+#    train_img = np.append(train_img, tempimage)
+#    train_labels = np.append(train_labels, templabel)
+#train_img = np.asarray(train_img)
+#del tempimage, tempimgno, templabel, image
 del train_paths
 
 test_paths = glob.glob(os.path.join(IMAGE_PATH, "test-tif-v2", "*.tif"))
 #test_img = np.asarray([plt.imread(image)/255 for image in test_paths[:1000]])
 test_labels = []
 test_img = []
-for image in test_paths[:1000]:
-    tempimage = plt.imread(image)/255
-    tempimgno = os.path.split(image)[1]
-    tempimgno = os.path.splitext(tempimgno)[0]
-    tempimgno = int(tempimgno.split("_")[1])
-    templabel = all_labels.loc[tempimgno][1].split()
-    templabel.insert(0, tempimgno)
-    test_img.append(tempimage)
-    test_img = np.asarray(test_img)
-    test_labels.append(templabel)
-del tempimage, tempimgno, templabel, image
+#for image in test_paths[:1000]:
+#    tempimage = plt.imread(image)/255
+#    tempimgno = os.path.split(image)[1]
+#    tempimgno = os.path.splitext(tempimgno)[0]
+#    tempimgno = int(tempimgno.split("_")[1])
+#    templabel = all_labels.loc[tempimgno][1].split()
+#    templabel.insert(0, tempimgno)
+#    test_img.append(tempimage)
+#    test_img = np.asarray(test_img)
+#    test_labels.append(templabel)
+#del tempimage, tempimgno, templabel, image
 del test_paths
-
 del all_labels
 
 # Get image size
