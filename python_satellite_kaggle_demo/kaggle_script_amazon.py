@@ -51,6 +51,7 @@ file_labels = []
 for i in file_img_no:
     print(i)
     file_labels.append(all_labels.iloc[i]['tags'].split(' '))
+del i
 file_labels = np.asarray(file_labels)
 
 #test_paths = glob.glob(os.path.join(IMAGE_PATH, "test-tif-v2", "*.tif"))
@@ -67,19 +68,19 @@ test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.sha
 #probably not needed 20190226
 #create training and validation sets based on an 80/20 split
 split_size = 0.1
-split_index = round(split_size * len(train_labels))
+split_index = round(split_size * len(file_labels))
 #shuffled_indices = pd.DataFrame(np.random.permutation(train_labels))
 #shuffled_indices.set_index(0, inplace = True)
 #shuffled_indices.head()
-training_indices = shuffled_indices[0:split_index]
-test_indices = shuffled_indices[split_index:] 
+#training_indices = shuffled_indices[0:split_index]
+#test_indices = shuffled_indices[split_index:] 
 
 ## Split the images and the labels
-#x_train = images[train_indices, :, :]
-#y_train = labels[train_indices]
-#x_test = images[test_indices, :, :]
-#y_test = labels[test_indices]
-#
+x_test = file_img[split_index:, :, :]
+y_test = file_labels[split_index:]
+x_train = file_img[0:split_index, :, :]
+y_train = file_labels[0:split_index]
+
 ##define function to plot two rows of images
 ##one with airplanes, one without
 #def visualize_data(positive_images, negative_images):
