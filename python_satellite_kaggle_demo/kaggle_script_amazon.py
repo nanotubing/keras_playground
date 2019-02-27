@@ -29,30 +29,29 @@ print(IMAGE_PATH)
 os.listdir(IMAGE_PATH)
 
 #generate a list of all tif images in the training directory
-train_paths = glob.glob(os.path.join(IMAGE_PATH, "train-tif-v2", "*.tif"))
-train_paths_subset = train_paths[:1000]
-del train_paths
+file_paths = glob.glob(os.path.join(IMAGE_PATH, "train-tif-v2", "*.tif"))
+file_paths_subset = file_paths[:1000]
+del file_paths
 #read in each tif into a numpy array, and throw all of them in a big numpy array
 #divide by 255 to rescale RGB values between 0 and 1. this allows the training
 #to finish in our lifetimes
 #only reading in the first 1000 images for memory reasons
 #alternately, could use imagedatagenerator to train in batches
-
 all_labels = pd.read_csv(r".\planet_amazon\train_v2.csv")
 
-train_img_no = []
-for i in train_paths_subset:
-    train_img_no.append(int(os.path.splitext(os.path.split(i)[1])[0].split("_")[1]))
+file_img_no = []
+for i in file_paths_subset:
+    file_img_no.append(int(os.path.splitext(os.path.split(i)[1])[0].split("_")[1]))
 del i
 
-train_img = []
-train_img = np.asarray([plt.imread(image)/255 for image in train_paths_subset])
+file_img = []
+file_img = np.asarray([plt.imread(image)/255 for image in file_paths_subset])
 
-train_labels = []
-for i in train_img_no:
+file_labels = []
+for i in file_img_no:
     print(i)
-    train_labels.append(all_labels.iloc[i]['tags'].split(' '))
-train_labels = np.asarray(train_labels)
+    file_labels.append(all_labels.iloc[i]['tags'].split(' '))
+file_labels = np.asarray(file_labels)
 
 #test_paths = glob.glob(os.path.join(IMAGE_PATH, "test-tif-v2", "*.tif"))
 #test_labels = []
