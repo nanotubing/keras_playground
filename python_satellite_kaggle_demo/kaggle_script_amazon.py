@@ -81,45 +81,7 @@ y_test = file_labels[split_index:]
 x_train = file_img[0:split_index, :, :]
 y_train = file_labels[0:split_index]
 
-##define function to plot two rows of images
-##one with airplanes, one without
-#def visualize_data(positive_images, negative_images):
-#    # INPUTS
-#    # positive_images - Images where the label = 1 (True)
-#    # negative_images - Images where the label = 0 (False)
-#
-#    figure = plt.figure()
-#    count = 0
-#    for i in range(positive_images.shape[0]):
-#        count += 1
-#        figure.add_subplot(2, positive_images.shape[0], count)
-#        plt.imshow(positive_images[i, :, :])
-#        plt.axis('off')
-#        plt.title("1")
-#
-#        figure.add_subplot(1, negative_images.shape[0], count)
-#        plt.imshow(negative_images[i, :, :])
-#        plt.axis('off')
-#        plt.title("0")
-#    plt.show()
-#
-## Number of positive and negative examples to show
-#N_TO_VISUALIZE = 10
-#
-## Select the first N positive examples
-#positive_example_indices = (y_train == 1)
-#positive_examples = x_train[positive_example_indices, :, :]
-#positive_examples = positive_examples[0:N_TO_VISUALIZE, :, :]
-#
-## Select the first N negative examples
-#negative_example_indices = (y_train == 0)
-#negative_examples = x_train[negative_example_indices, :, :]
-#negative_examples = negative_examples[0:N_TO_VISUALIZE, :, :]
-#
-## Call the visualization function
-#visualize_data(positive_examples, negative_examples)
-#
-#
+
 ##time to get down and dirty into the model
 ## Hyperparamater
 #N_LAYERS = 4
@@ -209,29 +171,3 @@ y_train = file_labels[0:split_index]
 ## Report the accuracy
 #accuracy = accuracy_score(y_test, test_predictions)
 #print("Accuracy: " + str(accuracy))
-#
-#
-#def visualize_incorrect_labels(x_data, y_real, y_predicted):
-#    # INPUTS
-#    # x_data      - images
-#    # y_data      - ground truth labels
-#    # y_predicted - predicted label
-#    count = 0
-#    figure = plt.figure()
-#    incorrect_label_indices = (y_real != y_predicted)
-#    y_real = y_real[incorrect_label_indices]
-#    y_predicted = y_predicted[incorrect_label_indices]
-#    x_data = x_data[incorrect_label_indices, :, :, :]
-#
-#    maximum_square = np.ceil(np.sqrt(x_data.shape[0]))
-#
-#    for i in range(x_data.shape[0]):
-#        count += 1
-#        figure.add_subplot(maximum_square, maximum_square, count)
-#        plt.imshow(x_data[i, :, :, :])
-#        plt.axis('off')
-#        plt.title("Predicted: " + str(int(y_predicted[i])) + ", Real: " + str(int(y_real[i])), fontsize=10)
-#
-#    plt.show()
-#
-#visualize_incorrect_labels(x_test, y_test, np.asarray(test_predictions).ravel())
