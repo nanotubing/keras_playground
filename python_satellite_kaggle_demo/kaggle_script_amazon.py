@@ -30,6 +30,7 @@ os.listdir(IMAGE_PATH)
 
 #generate a list of all tif images in the training directory
 train_paths = glob.glob(os.path.join(IMAGE_PATH, "train-tif-v2", "*.tif"))
+train_paths_subset = train_paths[:1000]
 #read in each tif into a numpy array, and throw all of them in a big numpy array
 #divide by 255 to rescale RGB values between 0 and 1. this allows the training
 #to finish in our lifetimes
@@ -37,19 +38,27 @@ train_paths = glob.glob(os.path.join(IMAGE_PATH, "train-tif-v2", "*.tif"))
 #alternately, could use imagedatagenerator to train in batches
 
 all_labels = pd.read_csv(r".\planet_amazon\train_v2.csv")
-train_labels = []
+
+train_img_no = []
+for i in train_paths_subset:
+    train_img_no.append(int(os.path.splitext(os.path.split(i)[1])[0].split("_")[1]))
 train_img = []
-for image in train_paths[:1000]:
+train_img = np.asarray([plt.imread(image)/255 for image in train_paths_subset])
+label_subset = 
+train_labels = []
+train_labels = np.asarray([print(label) for label in train_img_no])
+
+
+for image in train_paths_subset:
     tempimage = plt.imread(image)/255
     tempimgno = os.path.split(image)[1]
     tempimgno = os.path.splitext(tempimgno)[0]
     tempimgno = int(tempimgno.split("_")[1])
     templabel = all_labels.loc[tempimgno][1].split()
     templabel.insert(0, tempimgno)
-    train_img.append(tempimage)
-    train_img = np.asarray(train_img)
-    train_labels.append(templabel)
-
+    train_img = np.append(train_img, tempimage)
+    train_labels = np.append(train_labels, templabel)
+train_img = np.asarray(train_img)
 del tempimage, tempimgno, templabel, image
 del train_paths
 
@@ -84,10 +93,7 @@ test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.sha
 #shuffled_indices.set_index(0, inplace = True)
 #shuffled_indices.head()
 #training_indices = shuffled_indices[0:split_index]
-#test_indices = shuffled_indices[split_index:]
-
-for i in train_img:
-    temp = 
+#test_indices = shuffled_indices[split_index:] 
 
 ## Split the images and the labels
 #x_train = images[train_indices, :, :]
