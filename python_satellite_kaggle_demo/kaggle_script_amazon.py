@@ -46,6 +46,8 @@ del i
 
 file_img = []
 file_img = np.asarray([plt.imread(image)/255 for image in file_paths_subset])
+file_image_size = np.asarray([file_img.shape[1], file_img.shape[2], file_img.shape[3]])
+print(file_image_size)
 
 file_labels = []
 for i in file_img_no:
@@ -81,93 +83,92 @@ y_test = file_labels[split_index:]
 x_train = file_img[0:split_index, :, :]
 y_train = file_labels[0:split_index]
 
-
 ##time to get down and dirty into the model
 ## Hyperparamater
-#N_LAYERS = 4
-#
-#def cnn(size, n_layers):
-#    # INPUTS
-#    # size     - size of the input images
-#    # n_layers - number of layers
-#    # OUTPUTS
-#    # model    - compiled CNN
-#
-#    # Define hyperparamters
-#    MIN_NEURONS = 20
-#    MAX_NEURONS = 120
-#    KERNEL = (3, 3)
-#
-#    # Determine the # of neurons in each convolutional layer
-#    steps = np.floor(MAX_NEURONS / (n_layers + 1))
-#    nuerons = np.arange(MIN_NEURONS, MAX_NEURONS, steps)
-#    nuerons = nuerons.astype(np.int32)
-#
-#    # Define a model
-#    model = Sequential()
-#
-#    # Add convolutional layers
-#    for i in range(0, n_layers):
-#        if i == 0:
-#            shape = (size[0], size[1], size[2])
-#            model.add(Conv2D(nuerons[i], KERNEL, input_shape=shape))
-#        else:
-#            model.add(Conv2D(nuerons[i], KERNEL))
-#
-#        model.add(Activation('relu'))
-#
-#    # Add max pooling layer
-#    model.add(MaxPooling2D(pool_size=(2, 2)))
-#    model.add(Flatten())
-#    model.add(Dense(MAX_NEURONS))
-#    model.add(Activation('relu'))
-#
-#    # Add output layer
-#    model.add(Dense(1))
-#    model.add(Activation('sigmoid'))
-#
-#    # Compile the model
-#    model.compile(loss='binary_crossentropy',
-#                  optimizer='adam',
-#                  metrics=['accuracy'])
-#
-#    # Print a summary of the model
-#    model.summary()
-#
-#    return model
-#
+N_LAYERS = 4
+
+def cnn(size, n_layers):
+    # INPUTS
+    # size     - size of the input images
+    # n_layers - number of layers
+    # OUTPUTS
+    # model    - compiled CNN
+
+    # Define hyperparamters
+    MIN_NEURONS = 20
+    MAX_NEURONS = 120
+    KERNEL = (3, 3)
+
+    # Determine the # of neurons in each convolutional layer
+    steps = np.floor(MAX_NEURONS / (n_layers + 1))
+    nuerons = np.arange(MIN_NEURONS, MAX_NEURONS, steps)
+    nuerons = nuerons.astype(np.int32)
+
+    # Define a model
+    model = Sequential()
+
+    # Add convolutional layers
+    for i in range(0, n_layers):
+        if i == 0:
+            shape = (size[0], size[1], size[2])
+            model.add(Conv2D(nuerons[i], KERNEL, input_shape=shape))
+        else:
+            model.add(Conv2D(nuerons[i], KERNEL))
+
+        model.add(Activation('relu'))
+
+    # Add max pooling layer
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Flatten())
+    model.add(Dense(MAX_NEURONS))
+    model.add(Activation('relu'))
+
+    # Add output layer
+    model.add(Dense(1))
+    model.add(Activation('sigmoid'))
+
+    # Compile the model
+    model.compile(loss='binary_crossentropy',
+                  optimizer='adam',
+                  metrics=['accuracy'])
+
+    # Print a summary of the model
+    model.summary()
+
+    return model
+
 ## Instantiate the model
-#model = cnn(size=image_size, n_layers=N_LAYERS)
-#
-## Training hyperparamters
-#EPOCHS = 150
-#BATCH_SIZE = 200
-#
-## Early stopping callback
-#PATIENCE = 10
-#early_stopping = EarlyStopping(monitor='loss', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
-#
-## TensorBoard callback
-#LOG_DIRECTORY_ROOT = '.'
-#now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-#log_dir = "{}/run-{}/".format(LOG_DIRECTORY_ROOT, now)
-#tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
-#
-## Place the callbacks in a list
-#callbacks = [early_stopping, tensorboard]
-#
-## Train the model
-#model.fit(x_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, verbose=0)
-#
-##load the model
-##model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
-#
-##save the model
-#model.save('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')  
-#
-## Make a prediction on the test set
-#test_predictions = model.predict(x_test)
-#test_predictions = np.round(test_predictions)
-## Report the accuracy
-#accuracy = accuracy_score(y_test, test_predictions)
-#print("Accuracy: " + str(accuracy))
+model = cnn(size=file_image_size, n_layers=N_LAYERS)
+
+# Training hyperparamters
+EPOCHS = 150
+BATCH_SIZE = 40
+
+# Early stopping callback
+PATIENCE = 10
+early_stopping = EarlyStopping(monitor='loss', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
+
+# TensorBoard callback
+LOG_DIRECTORY_ROOT = '.'
+now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+log_dir = "{}/run-{}/".format(LOG_DIRECTORY_ROOT, now)
+tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
+
+# Place the callbacks in a list
+callbacks = [early_stopping, tensorboard]
+
+# Train the model
+model.fit(x_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, verbose=0)
+
+#load the model
+#model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
+
+#save the model
+model.save('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')  
+
+# Make a prediction on the test set
+test_predictions = model.predict(x_test)
+test_predictions = np.round(test_predictions)
+# Report the accuracy
+accuracy = accuracy_score(y_test, test_predictions)
+print("Accuracy: " + str(accuracy))
