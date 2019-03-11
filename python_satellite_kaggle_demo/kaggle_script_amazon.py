@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 # keras imports
 from keras.utils import to_categorical
 from keras.preprocessing.text import one_hot
-from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import MultiLabelBinarizer
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
 from keras.callbacks import EarlyStopping, TensorBoard
@@ -58,28 +58,17 @@ for i in file_img_no:
     if len(all_labels.iloc[i]['tags'][:].split()) > max_classes:
         max_classes = len(all_labels.iloc[i]['tags'])
 
-encoder = LabelBinarizer()
-temp4 = encoder.fit_transform(all_labels.iloc[:]['tags'])
-
 file_labels = []
-#temp2 = np.zeros((len(file_img_no), max_classes))
-#temp2 = [[] for i in range(len(file_img_no))]
+file_labels2 = np.zeros((len(file_img_no), max_classes))
 for i in file_img_no:
     temp = all_labels.iloc[i]['tags'].split(" ")
     print(temp)
     file_labels.append(temp)
-    #file_labels.append(all_labels.iloc[i]['tags'].split(" "))
-#    for j in range(len(temp)):
-#        print("\nLabel: " + str(temp[j]))
-#        temp2[i][j] = temp[j]
-#        temp2[i].append(temp[j])
-del i, j
-#calculate max length of label array
-file_labels_length = sorted(file_labels,key=len, reverse=True)[0]
-file_labels2 = np.array([i+[None]*(file_labels_length-len(i)) for i in file_labels])
-file_labels = np.asarray(file_labels)
+del i
 
-temp5 = encoder.fit_transform(file_labels)
+encoder = MultiLabelBinarizer()
+file_labels2 = encoder.fit_transform(file_labels)
+file_labels = np.asarray(file_labels)
 
 del all_labels
 
