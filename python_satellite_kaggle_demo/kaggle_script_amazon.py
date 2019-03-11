@@ -68,7 +68,7 @@ del i
 
 encoder = MultiLabelBinarizer()
 file_labels2 = encoder.fit_transform(file_labels)
-file_labels = np.asarray(file_labels)
+file_labels2 = np.asarray(file_labels2)
 
 del all_labels
 
@@ -79,7 +79,7 @@ del all_labels
 #probably not needed 20190226
 #create training and validation sets based on an 80/20 split
 split_size = 0.1
-split_index = round(split_size * len(file_labels))
+split_index = round(split_size * len(file_labels2))
 #shuffled_indices = pd.DataFrame(np.random.permutation(train_labels))
 #shuffled_indices.set_index(0, inplace = True)
 #shuffled_indices.head()
@@ -88,19 +88,18 @@ split_index = round(split_size * len(file_labels))
 
 
 #one-hot encode the labels
-def encode(data):
-    print('Shape of data (BEFORE encode): %s' % str(data.shape))
-    encoded = to_categorical(data)
-    print('Shape of data (AFTER  encode): %s\n' % str(encoded.shape))
-    return encoded
-
-file_labels_onehot = encode(file_labels)
+#def encode(data):
+#    print('Shape of data (BEFORE encode): %s' % str(data.shape))
+#    encoded = to_categorical(data)
+#    print('Shape of data (AFTER  encode): %s\n' % str(encoded.shape))
+#    return encoded
+#file_labels_onehot = encode(file_labels)
 
 ## Split the images and the labels
 x_test = file_img[split_index:, :, :]
-y_test = file_labels[split_index:]
+y_test = file_labels2[split_index:]
 x_train = file_img[0:split_index, :, :]
-y_train = file_labels[0:split_index]
+y_train = file_labels2[0:split_index]
 
 ##time to get down and dirty into the model
 ## Hyperparamater
