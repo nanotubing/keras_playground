@@ -158,8 +158,21 @@ def cnn(size, n_layers):
 ## Instantiate the model
 model = cnn(size=file_image_size, n_layers=N_LAYERS)
 
+model2 = Sequential() #model = sequential 
+model2.add(Conv2D(32, kernel_size=(3, 3),activation='relu',input_shape=file_image_size)) #layer convolutional 2D
+model2.add(MaxPooling2D(pool_size=(2,2))) #max pooling with stride (2,2)
+model2.add(Conv2D(32, (3, 3), activation='relu')) #layer convolutional 2D
+model2.add(MaxPooling2D(pool_size=(2,2))) #max pooling with stride (2,2)
+model2.add(Dropout(0.25)) #delete neuron randomly while training and remain 75%
+model2.add(Flatten()) #make layer flatten
+model2.add(Dense(128, activation='relu')) #fully connected layer
+model2.add(Dropout(0.5)) #delete neuron randomly and remain 50%
+model2.add(Dense(21, activation='softmax')) #softmax works
+
+model2.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy']) #setting loss function and optimizer
+
 # Training hyperparamters
-EPOCHS = 150
+EPOCHS = 100
 BATCH_SIZE = 40
 
 # Early stopping callback
@@ -178,6 +191,13 @@ callbacks = [early_stopping, tensorboard]
 # Train the model
 model.fit(x_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, verbose=0)
 del log_dir, now
+
+model2.fit(x_train, y_train, batch_size=BATCH_SIZE, nb_epoch=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
+loss, acc = model.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
+print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
+
+
+
 
 #load the model
 #model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
