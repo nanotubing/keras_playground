@@ -13,6 +13,7 @@ import os#, sys
 import pandas as pd
 import matplotlib.pyplot as plt
 # keras imports
+from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
 from keras.callbacks import EarlyStopping, TensorBoard
@@ -64,8 +65,8 @@ file_labels = np.asarray(file_labels)
 del all_labels
 
 # Get image size
-train_image_size = np.asarray([train_img.shape[1], train_img.shape[2], train_img.shape[3]])
-test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.shape[3]])
+#train_image_size = np.asarray([train_img.shape[1], train_img.shape[2], train_img.shape[3]])
+#test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.shape[3]])
 
 #probably not needed 20190226
 #create training and validation sets based on an 80/20 split
