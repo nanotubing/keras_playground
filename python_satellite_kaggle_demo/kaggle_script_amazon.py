@@ -12,15 +12,12 @@ import numpy as np
 import os#, sys
 import pandas as pd
 import matplotlib.pyplot as plt
-# keras imports
-from keras.utils import to_categorical
-from keras.preprocessing.text import one_hot
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.metrics import accuracy_score, f1_score
+# keras imports
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
 from keras.callbacks import EarlyStopping, TensorBoard
-#from sklearn.metrics import accuracy_score, f1_score
 from datetime import datetime
 
 # IMAGE_PATH should be the path to the downloaded amazon tiles in data folder
@@ -139,7 +136,6 @@ callbacks = [early_stopping, tensorboard]
 model2.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
 loss, acc = model2.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
 print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
-
 del log_dir, now
 
 #load the model
