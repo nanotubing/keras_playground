@@ -52,15 +52,10 @@ print(file_image_size)
 
 file_labels = []
 for i in file_img_no:
-    print(i)
+    print(all_labels.iloc[i]['tags'].split(' '))
     file_labels.append(all_labels.iloc[i]['tags'].split(' '))
 del i
 file_labels = np.asarray(file_labels)
-
-#test_paths = glob.glob(os.path.join(IMAGE_PATH, "test-tif-v2", "*.tif"))
-#test_labels = []
-#test_img = []
-#del test_paths
 
 del all_labels
 
@@ -77,6 +72,16 @@ split_index = round(split_size * len(file_labels))
 #shuffled_indices.head()
 #training_indices = shuffled_indices[0:split_index]
 #test_indices = shuffled_indices[split_index:] 
+
+
+#one-hot encode the labels
+def encode(data):
+    print('Shape of data (BEFORE encode): %s' % str(data.shape))
+    encoded = to_categorical(data)
+    print('Shape of data (AFTER  encode): %s\n' % str(encoded.shape))
+    return encoded
+
+file_labels_onehot = encode(file_labels)
 
 ## Split the images and the labels
 x_test = file_img[split_index:, :, :]
