@@ -55,9 +55,9 @@ max_classes = 0
 for i in file_img_no:
     if len(all_labels.iloc[i]['tags'][:].split()) > max_classes:
         max_classes = len(all_labels.iloc[i]['tags'])
+del i
 
 file_labels = []
-file_labels2 = np.zeros((len(file_img_no), max_classes))
 for i in file_img_no:
     temp = all_labels.iloc[i]['tags'].split(" ")
     print(temp)
@@ -70,28 +70,16 @@ file_labels2 = np.asarray(file_labels2)
 
 del all_labels
 
-# Get image size
-#train_image_size = np.asarray([train_img.shape[1], train_img.shape[2], train_img.shape[3]])
-#test_image_size = np.asarray([test_img.shape[1], test_img.shape[2], test_img.shape[3]])
 
 #probably not needed 20190226
 #create training and validation sets based on an 80/20 split
-split_size = 0.1
+split_size = 0.9
 split_index = round(split_size * len(file_labels2))
 #shuffled_indices = pd.DataFrame(np.random.permutation(train_labels))
 #shuffled_indices.set_index(0, inplace = True)
 #shuffled_indices.head()
 #training_indices = shuffled_indices[0:split_index]
 #test_indices = shuffled_indices[split_index:] 
-
-
-#one-hot encode the labels
-#def encode(data):
-#    print('Shape of data (BEFORE encode): %s' % str(data.shape))
-#    encoded = to_categorical(data)
-#    print('Shape of data (AFTER  encode): %s\n' % str(encoded.shape))
-#    return encoded
-#file_labels_onehot = encode(file_labels)
 
 ## Split the images and the labels
 x_test = file_img[split_index:, :, :]
@@ -103,23 +91,22 @@ y_train = file_labels2[0:split_index]
 ## Hyperparamater
 N_LAYERS = 4
 
-model2 = Sequential() #model = sequential 
-model2.add(Conv2D(32, kernel_size=(3, 3),activation='relu',input_shape=file_image_size)) #layer convolutional 2D
-model2.add(MaxPooling2D(pool_size=(2,2))) #max pooling with stride (2,2)
-model2.add(Conv2D(32, (3, 3), activation='relu')) #layer convolutional 2D
-model2.add(MaxPooling2D(pool_size=(2,2))) #max pooling with stride (2,2)
-model2.add(Dropout(0.25)) #delete neuron randomly while training and remain 75%
-model2.add(Flatten()) #make layer flatten
-model2.add(Dense(128, activation='relu')) #fully connected layer
-model2.add(Dropout(0.5)) #delete neuron randomly and remain 50%
-model2.add(Dense(17, activation='softmax')) #softmax works
+model = Sequential() #model = sequential 
+model.add(Conv2D(32, kernel_size=(3, 3),activation='relu',input_shape=file_image_size)) #layer convolutional 2D
+model.add(MaxPooling2D(pool_size=(2,2))) #max pooling with stride (2,2)
+model.add(Conv2D(32, (3, 3), activation='relu')) #layer convolutional 2D
+model.add(MaxPooling2D(pool_size=(2,2))) #max pooling with stride (2,2)
+model.add(Dropout(0.25)) #delete neuron randomly while training and remain 75%
+model.add(Flatten()) #make layer flatten
+model.add(Dense(128, activation='relu')) #fully connected layer
+model.add(Dropout(0.5)) #delete neuron randomly and remain 50%
+model.add(Dense(17, activation='softmax')) #softmax works
+model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy']) #setting loss function and optimizer
+model.summary()
 
-model2.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy']) #setting loss function and optimizer
-model2.summary()
 # Training hyperparamters
-EPOCHS = 100
+EPOCHS = 150
 BATCH_SIZE = 40
-
 # Early stopping callback
 PATIENCE = 10
 early_stopping = EarlyStopping(monitor='loss', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
@@ -133,9 +120,10 @@ tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
 # Place the callbacks in a list
 callbacks = [early_stopping, tensorboard]
 
-model2.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
-loss, acc = model2.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
+model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
+loss, acc = model.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
 print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
+
 del log_dir, now
 
 #load the model
@@ -145,7 +133,7 @@ del log_dir, now
 model2.save('cschrader_model_20190311.h5')  
 
 # Make a prediction on the test set
-test_predictions = model2.predict(x_test)
+test_predictions = model.predict(x_test)
 test_predictions = np.round(test_predictions)
 # Report the accuracy
 accuracy = accuracy_score(y_test, test_predictions)
