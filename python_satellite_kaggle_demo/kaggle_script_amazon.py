@@ -76,7 +76,7 @@ for i in file_img_no:
 del i, j
 #calculate max length of label array
 file_labels_length = sorted(file_labels,key=len, reverse=True)[0]
-file_labels2 = numpy.array([i+[None]*(file_labels_length-len(i)) for i in file_labels])
+file_labels2 = np.array([i+[None]*(file_labels_length-len(i)) for i in file_labels])
 file_labels = np.asarray(file_labels)
 
 temp5 = encoder.fit_transform(file_labels)
