@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from keras.utils import to_categorical
 from keras.preprocessing.text import one_hot
 from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.metrics import accuracy_score, f1_score
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
 from keras.callbacks import EarlyStopping, TensorBoard
@@ -105,59 +106,6 @@ y_train = file_labels2[0:split_index]
 ## Hyperparamater
 N_LAYERS = 4
 
-def cnn(size, n_layers):
-    # INPUTS
-    # size     - size of the input images
-    # n_layers - number of layers
-    # OUTPUTS
-    # model    - compiled CNN
-
-    # Define hyperparamters
-    MIN_NEURONS = 20
-    MAX_NEURONS = 120
-    KERNEL = (3, 3)
-
-    # Determine the # of neurons in each convolutional layer
-    steps = np.floor(MAX_NEURONS / (n_layers + 1))
-    nuerons = np.arange(MIN_NEURONS, MAX_NEURONS, steps)
-    nuerons = nuerons.astype(np.int32)
-
-    # Define a model
-    model = Sequential()
-
-    # Add convolutional layers
-    for i in range(0, n_layers):
-        if i == 0:
-            shape = (size[0], size[1], size[2])
-            model.add(Conv2D(nuerons[i], KERNEL, input_shape=shape))
-        else:
-            model.add(Conv2D(nuerons[i], KERNEL))
-
-        model.add(Activation('relu'))
-
-    # Add max pooling layer
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Flatten())
-    model.add(Dense(MAX_NEURONS))
-    model.add(Activation('relu'))
-
-    # Add output layer
-    model.add(Dense(1))
-    model.add(Activation('sigmoid'))
-
-    # Compile the model
-    model.compile(loss='binary_crossentropy',
-                  optimizer='adam',
-                  metrics=['accuracy'])
-
-    # Print a summary of the model
-    model.summary()
-
-    return model
-
-## Instantiate the model
-model = cnn(size=file_image_size, n_layers=N_LAYERS)
-
 model2 = Sequential() #model = sequential 
 model2.add(Conv2D(32, kernel_size=(3, 3),activation='relu',input_shape=file_image_size)) #layer convolutional 2D
 model2.add(MaxPooling2D(pool_size=(2,2))) #max pooling with stride (2,2)
@@ -167,10 +115,10 @@ model2.add(Dropout(0.25)) #delete neuron randomly while training and remain 75%
 model2.add(Flatten()) #make layer flatten
 model2.add(Dense(128, activation='relu')) #fully connected layer
 model2.add(Dropout(0.5)) #delete neuron randomly and remain 50%
-model2.add(Dense(21, activation='softmax')) #softmax works
+model2.add(Dense(17, activation='softmax')) #softmax works
 
 model2.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy']) #setting loss function and optimizer
-
+model2.summary()
 # Training hyperparamters
 EPOCHS = 100
 BATCH_SIZE = 40
@@ -188,25 +136,20 @@ tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
 # Place the callbacks in a list
 callbacks = [early_stopping, tensorboard]
 
-# Train the model
-model.fit(x_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, verbose=0)
-del log_dir, now
-
-model2.fit(x_train, y_train, batch_size=BATCH_SIZE, nb_epoch=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
-loss, acc = model.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
+model2.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
+loss, acc = model2.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
 print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
 
-
-
+del log_dir, now
 
 #load the model
 #model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
 
 #save the model
-model.save('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')  
+model2.save('cschrader_model_20190311.h5')  
 
 # Make a prediction on the test set
-test_predictions = model.predict(x_test)
+test_predictions = model2.predict(x_test)
 test_predictions = np.round(test_predictions)
 # Report the accuracy
 accuracy = accuracy_score(y_test, test_predictions)
