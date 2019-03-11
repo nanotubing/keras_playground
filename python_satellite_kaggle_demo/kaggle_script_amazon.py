@@ -14,6 +14,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 # keras imports
 from keras.utils import to_categorical
+from keras.preprocessing.text import one_hot
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
 from keras.callbacks import EarlyStopping, TensorBoard
@@ -51,10 +52,21 @@ file_image_size = np.asarray([file_img.shape[1], file_img.shape[2], file_img.sha
 print(file_image_size)
 
 file_labels = []
+#calculate number of classes in labels
+max_classes = 0
 for i in file_img_no:
-    print(all_labels.iloc[i]['tags'].split(' '))
-    file_labels.append(all_labels.iloc[i]['tags'].split(' '))
-del i
+    if len(all_labels.iloc[i]['tags'][:].split()) > max_classes:
+        max_classes = len(all_labels.iloc[i]['tags'])
+
+temp2 = np.zeros((len(file_img_no), max_classes))
+for i in file_img_no:
+    print(all_labels.iloc[i]['tags'].split(" "))
+    temp = all_labels.iloc[i]['tags'].split(" ")
+    for j in range(len(temp)-1):
+        print("\nLabel: " + str(temp[j]))
+        temp2[i][j] = temp
+    #file_labels.append(all_labels.iloc[i]['tags'].split(" "))
+del i, j, max_classes
 file_labels = np.asarray(file_labels)
 
 del all_labels
