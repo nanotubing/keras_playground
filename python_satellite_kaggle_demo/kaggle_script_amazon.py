@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 # keras imports
 from keras.utils import to_categorical
 from keras.preprocessing.text import one_hot
+from sklearn.preprocessing import LabelBinarizer
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
 from keras.callbacks import EarlyStopping, TensorBoard
@@ -51,23 +52,34 @@ file_img = np.asarray([plt.imread(image)/255 for image in file_paths_subset])
 file_image_size = np.asarray([file_img.shape[1], file_img.shape[2], file_img.shape[3]])
 print(file_image_size)
 
-file_labels = []
 #calculate number of classes in labels
 max_classes = 0
 for i in file_img_no:
     if len(all_labels.iloc[i]['tags'][:].split()) > max_classes:
         max_classes = len(all_labels.iloc[i]['tags'])
 
-temp2 = np.zeros((len(file_img_no), max_classes))
+encoder = LabelBinarizer()
+temp4 = encoder.fit_transform(all_labels.iloc[:]['tags'])
+
+file_labels = []
+#temp2 = np.zeros((len(file_img_no), max_classes))
+#temp2 = [[] for i in range(len(file_img_no))]
 for i in file_img_no:
-    print(all_labels.iloc[i]['tags'].split(" "))
     temp = all_labels.iloc[i]['tags'].split(" ")
-    for j in range(len(temp)-1):
-        print("\nLabel: " + str(temp[j]))
-        temp2[i][j] = temp
+    print(temp)
+    file_labels.append(temp)
     #file_labels.append(all_labels.iloc[i]['tags'].split(" "))
-del i, j, max_classes
+#    for j in range(len(temp)):
+#        print("\nLabel: " + str(temp[j]))
+#        temp2[i][j] = temp[j]
+#        temp2[i].append(temp[j])
+del i, j
+#calculate max length of label array
+file_labels_length = sorted(file_labels,key=len, reverse=True)[0]
+file_labels2 = numpy.array([i+[None]*(file_labels_length-len(i)) for i in file_labels])
 file_labels = np.asarray(file_labels)
+
+temp5 = encoder.fit_transform(file_labels)
 
 del all_labels
 
@@ -177,6 +189,7 @@ callbacks = [early_stopping, tensorboard]
 
 # Train the model
 model.fit(x_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, verbose=0)
+del log_dir, now
 
 #load the model
 #model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
