@@ -115,7 +115,7 @@ tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
 # Place the callbacks in a list
 callbacks = [early_stopping, tensorboard]
 
-model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
+model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
 loss, acc = model.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
 print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
 
@@ -124,7 +124,7 @@ print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
 #load the model
 #model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
 #save the model
-model.save('cschrader_model_20190311.h5')  
+model.save('cschrader_model_20190312.h5')  
 
 # Make a prediction on the test set
 test_predictions = model.predict(x_test)
