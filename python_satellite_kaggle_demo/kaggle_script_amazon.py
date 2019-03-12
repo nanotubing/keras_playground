@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Spyder Editor
-
-This is a temporary script file.
+script building a neural network to create a land cover classification map
 """
 #https://github.com/EKami/planet-amazon-deforestation/blob/master/notebooks/amazon_forest_notebook_preview.ipynb
+#https://github.com/ZFTurbo/Kaggle-Planet-Understanding-the-Amazon-from-Space
+#https://medium.com/@kylepob61392/airplane-image-classification-using-a-keras-cnn-22be506fdb53
+#https://github.com/tavgreen/landuse_classification
+#https://www.kaggle.com/c/planet-understanding-the-amazon-from-space
 
 # Imports
 import glob
@@ -105,8 +107,8 @@ model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accurac
 model.summary()
 
 # Training hyperparamters
-EPOCHS = 150
-BATCH_SIZE = 40
+EPOCHS = 100
+BATCH_SIZE = 250
 # Early stopping callback
 PATIENCE = 10
 early_stopping = EarlyStopping(monitor='loss', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
