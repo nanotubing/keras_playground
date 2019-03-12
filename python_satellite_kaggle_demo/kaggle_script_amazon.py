@@ -72,16 +72,9 @@ file_labels2 = np.asarray(file_labels2)
 
 del all_labels
 
-
-#probably not needed 20190226
 #create training and validation sets based on an 80/20 split
 split_size = 0.9
 split_index = round(split_size * len(file_labels2))
-#shuffled_indices = pd.DataFrame(np.random.permutation(train_labels))
-#shuffled_indices.set_index(0, inplace = True)
-#shuffled_indices.head()
-#training_indices = shuffled_indices[0:split_index]
-#test_indices = shuffled_indices[split_index:] 
 
 ## Split the images and the labels
 x_test = file_img[split_index:, :, :]
@@ -126,13 +119,12 @@ model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, val
 loss, acc = model.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
 print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
 
-del log_dir, now
+#del log_dir, now
 
 #load the model
 #model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
-
 #save the model
-model2.save('cschrader_model_20190311.h5')  
+model.save('cschrader_model_20190311.h5')  
 
 # Make a prediction on the test set
 test_predictions = model.predict(x_test)
