@@ -13,9 +13,10 @@ import glob
 import numpy as np
 import os#, sys
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, classification_report
 # keras imports
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
@@ -101,7 +102,7 @@ model.summary()
 
 # Training hyperparamters
 EPOCHS = 100
-BATCH_SIZE = 250
+BATCH_SIZE = 100
 # Early stopping callback
 PATIENCE = 10
 early_stopping = EarlyStopping(monitor='loss', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
@@ -115,7 +116,7 @@ tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
 # Place the callbacks in a list
 callbacks = [early_stopping, tensorboard]
 
-model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
+model_fit_history = model.fit(x_train, y_train, batch_size=100, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
 loss, acc = model.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
 print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
 
@@ -124,11 +125,44 @@ print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
 #load the model
 #model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
 #save the model
-model.save('cschrader_model_20190312.h5')  
+model.save('cschrader_model_20190312002.h5')  
+
+#plot training loss vs validation loss
+matplotlib.style.use('seaborn')
+epochs = len(model_fit_history.history['loss'])
+max_loss = max(max(model_fit_history.history['loss']), max(model_fit_history.history['val_loss']))
+plt.axis([0, epochs+1, 0, round(max_loss * 2.0) / 2 + 0.5])
+x = np.arange(1, epochs+1)
+plt.plot(x, model_fit_history.history['loss'])
+plt.plot(x, model_fit_history.history['val_loss'])
+plt.title('Training loss vs. Validation loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['Training', 'Validation'], loc='right')
+plt.show()
+
+#plot training accuracy vs validation accuracy
+matplotlib.style.use('seaborn')
+epochs = len(model_fit_history.history['acc'])
+plt.axis([0, epochs+1, 0, 1.2])
+x = np.arange(1, epochs+1)
+plt.plot(x, model_fit_history.history['acc'])
+plt.plot(x, model_fit_history.history['val_acc'])
+plt.title('Training accuracy vs. Validation accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(['Training', 'Validation'], loc='right')
+plt.show()
 
 # Make a prediction on the test set
 test_predictions = model.predict(x_test)
 test_predictions = np.round(test_predictions)
 # Report the accuracy
+
+#print classification results
+# Flatten Y into a vector
+#y_test = np.nonzero(Y['test'])[1]
 accuracy = accuracy_score(y_test, test_predictions)
 print("Accuracy: " + str(accuracy))
+print(f'Model predication accuracy: {accuracy:.3f}')
+print(f'\nClassification report:\n {classification_report(y_test, test_predictions)}')
