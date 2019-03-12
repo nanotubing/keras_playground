@@ -157,26 +157,29 @@ plt.xlabel('Epoch')
 plt.legend(['Training', 'Validation'], loc='right')
 plt.show()
 
-#create a confusion matrix
-confusion_matrix = confusion_matrix(y_test, test_predictions)
 # Make a prediction on the test set
-test_predictions = model.predict(x_test)
-test_predictions = np.round(test_predictions)
+y_pred = model.predict(x_test)
+y_pred = np.round(y_pred)
 #convert predicted classed from mlb back to text
-predicted_classes = encoder.inverse_transform(test_predictions)
+predicted_classes = encoder.inverse_transform(y_pred)
+#convert y_test back to categorical
+#y_test_text = encoder.inverse_transform(y_test)
+#create a confusion matrix
+cm = confusion_matrix(y_test.argmax(axis=1), y_pred.argmax(axis=1))
+print(cm)
 
 #print classification results
 # Flatten Y into a vector
 #y_test = np.nonzero(Y['test'])[1]
-accuracy = accuracy_score(y_test, test_predictions)
+accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy: " + str(accuracy))
 print(f'Model predication accuracy: {accuracy:.3f}')
-print(f'\nClassification report:\n {classification_report(y_test, test_predictions)}')
+print(f'\nClassification report:\n {classification_report(y_test, y_pred)}')
 
 #plot raster
 # A cleaner seaborn style for raster plots
 sns.set_style("white")
 # Plot newly classified and masked raster
 fig, ax = plt.subplots(figsize = (10,6))
-ax.imshow(test_predictions)
+ax.imshow(y_pred)
 plt.show()
