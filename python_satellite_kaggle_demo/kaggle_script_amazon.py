@@ -15,8 +15,9 @@ import os#, sys
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.metrics import accuracy_score, f1_score, classification_report
+from sklearn.metrics import accuracy_score, f1_score, classification_report, confusion_matrix
 # keras imports
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
@@ -65,8 +66,9 @@ for i in file_img_no:
     temp = all_labels.iloc[i]['tags'].split(" ")
     print(temp)
     file_labels.append(temp)
-del i
+del i, temp
 
+#encode categorical labels into a binary matrix
 encoder = MultiLabelBinarizer()
 file_labels2 = encoder.fit_transform(file_labels)
 file_labels2 = np.asarray(file_labels2)
@@ -100,30 +102,31 @@ model.add(Dense(17, activation='softmax')) #softmax works
 model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy']) #setting loss function and optimizer
 model.summary()
 
-# Training hyperparamters
+# TensorBoard callback
+#commented out because accessing this tool problematic on CLA desktop
+#LOG_DIRECTORY_ROOT = '.'
+#now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+#log_dir = "{}/run-{}/".format(LOG_DIRECTORY_ROOT, now)
+#tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
+#Training hyperparamters
 EPOCHS = 100
 BATCH_SIZE = 100
-# Early stopping callback
+#Early stopping callback
 PATIENCE = 10
 early_stopping = EarlyStopping(monitor='loss', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
-
-# TensorBoard callback
-LOG_DIRECTORY_ROOT = '.'
-now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-log_dir = "{}/run-{}/".format(LOG_DIRECTORY_ROOT, now)
-tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True)
-
 # Place the callbacks in a list
-callbacks = [early_stopping, tensorboard]
-
+#callbacks = [early_stopping, tensorboard]
+callbacks = [early_stopping]
+#run the model and collecte output
 model_fit_history = model.fit(x_train, y_train, batch_size=100, epochs=EPOCHS, verbose=1, validation_data=(x_test, y_test)) #training with epochs 100, batch size = 50
+#calculate loss and accuracy
 loss, acc = model.evaluate(x_test, y_test, verbose=0) #evaluate testing data and calculate loss and accuracy
 print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
-
+#clean up after tensorboard
 #del log_dir, now
 
 #load the model
-#model = load_model('/Users/cschrader/Documents/GitHub/keras_playground/python_satellite_kaggle_demo/data/cschrader_model.h5')
+#model = load_model('cschrader_model_20190312002.h5')
 #save the model
 model.save('cschrader_model_20190312002.h5')  
 
@@ -154,10 +157,13 @@ plt.xlabel('Epoch')
 plt.legend(['Training', 'Validation'], loc='right')
 plt.show()
 
+#create a confusion matrix
+confusion_matrix = confusion_matrix(y_test, test_predictions)
 # Make a prediction on the test set
 test_predictions = model.predict(x_test)
 test_predictions = np.round(test_predictions)
-# Report the accuracy
+#convert predicted classed from mlb back to text
+predicted_classes = encoder.inverse_transform(test_predictions)
 
 #print classification results
 # Flatten Y into a vector
@@ -166,3 +172,11 @@ accuracy = accuracy_score(y_test, test_predictions)
 print("Accuracy: " + str(accuracy))
 print(f'Model predication accuracy: {accuracy:.3f}')
 print(f'\nClassification report:\n {classification_report(y_test, test_predictions)}')
+
+#plot raster
+# A cleaner seaborn style for raster plots
+sns.set_style("white")
+# Plot newly classified and masked raster
+fig, ax = plt.subplots(figsize = (10,6))
+ax.imshow(test_predictions)
+plt.show()
