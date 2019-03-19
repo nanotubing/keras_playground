@@ -79,8 +79,6 @@ if __name__ == '__main__':
     img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
     img_fixed2 = img_fixed2[:848, :837, :]
 #    tiff.imsave('planet_classtest_trim.tif', img_fixed2)
-#    img_fixed = np.zeros(shape = (img.shape[0], img.shape[1], 8), dtype = np.float32)
-#    img_fixed[:, :, :img.shape[2]] = img
     img = img_fixed2
         
     for i in range(7):
