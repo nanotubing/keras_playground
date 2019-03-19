@@ -70,13 +70,15 @@ def picture_from_mask(mask, threshold=0):
 if __name__ == '__main__':
     model = get_model()
     model.load_weights(weights_path)
-    #test_id = 'test'
+#    test_id = 'test'
     test_id = '20180104_143418_0f34_1B_AnalyticMS'
-    #img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
+#    img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
     img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,0,2]))   # rearrange order for planet image
     #add 4 channels of 0 to array to predict planet image
     img_pad = ((0,0), (0,0), (0,4))
     img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
+    img_fixed2 = img_fixed2[:848, :837, :]
+#    tiff.imsave('planet_classtest_trim.tif', img_fixed2)
 #    img_fixed = np.zeros(shape = (img.shape[0], img.shape[1], 8), dtype = np.float32)
 #    img_fixed[:, :, :img.shape[2]] = img
     img = img_fixed2
