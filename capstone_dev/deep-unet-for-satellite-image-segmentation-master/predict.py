@@ -75,11 +75,12 @@ if __name__ == '__main__':
     #img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
     img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,0,2]))   # rearrange order for planet image
     #add 4 channels of 0 to array to predict planet image
-    img_fixed = np.zeros(shape = (6590, 2118, 8), dtype = np.float32)
-    img_fixed[:, :, :img.shape[2]] = img
-    img = img_fixed
-
-    
+    img_pad = ((0,0), (0,0), (0,4))
+    img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
+#    img_fixed = np.zeros(shape = (img.shape[0], img.shape[1], 8), dtype = np.float32)
+#    img_fixed[:, :, :img.shape[2]] = img
+    img = img_fixed2
+        
     for i in range(7):
         if i == 0:  # reverse first dimension
             mymat = predict(img[::-1,:,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
