@@ -68,18 +68,25 @@ def picture_from_mask(mask, threshold=0):
 
 
 if __name__ == '__main__':
+    #are we running the predictions script against the built-in test data, or
+    #a planet image?
+    planet_test = False
+#    planet_test = True
     model = get_model()
     model.load_weights(weights_path)
-#    test_id = 'test'
-    test_id = '20180104_143418_0f34_1B_AnalyticMS'
-#    img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
-    img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,0,2]))   # rearrange order for planet image
-    #add 4 channels of 0 to array to predict planet image
-    img_pad = ((0,0), (0,0), (0,4))
-    img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
-    img_fixed2 = img_fixed2[:848, :837, :]
-#    tiff.imsave('planet_classtest_trim.tif', img_fixed2)
-    img = img_fixed2
+    if planet_test == False:
+        test_id = 'test'
+        img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
+    elif planet_test == True:
+        test_id = '20180104_143418_0f34_1B_AnalyticMS'
+        img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,0,2]))   # rearrange order for planet image
+        #    add 4 channels of 0 to array to predict planet image
+        img_pad = ((0,0), (0,0), (0,4))
+        img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
+        #trim the planet image to the same dimensions as training data
+        img_fixed2 = img_fixed2[:848, :837, :]
+        tiff.imsave('planet_classtest_trim.tif', img_fixed2)
+        img = img_fixed2
         
     for i in range(7):
         if i == 0:  # reverse first dimension
@@ -121,7 +128,11 @@ if __name__ == '__main__':
     map = picture_from_mask(mymat, 0.5)
     #mask = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])  # make channels first
     #map = picture_from_mask(mask, 0.5)
-
-    #tiff.imsave('result.tif', (255*mask).astype('uint8'))
-    tiff.imsave('result.tif', (255*mymat).astype('uint8'))
-    tiff.imsave('map.tif', map)
+    
+    if planet_test == False:
+        tiff.imsave('result.tif', (255*mymat).astype('uint8'))
+        tiff.imsave('map.tif', map)
+    elif planet_test == True:
+        tiff.imsave('planet_result.tif', (255*mymat).astype('uint8'))
+        tiff.imsave('planet_map.tif', map)
+    
