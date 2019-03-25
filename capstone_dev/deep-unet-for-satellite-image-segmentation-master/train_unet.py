@@ -7,7 +7,9 @@ import tifffile as tiff
 from keras.callbacks import CSVLogger
 from keras.callbacks import TensorBoard
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
-
+from sklearn.metrics import accuracy_score, f1_score, classification_report, confusion_matrix
+import matplotlib
+import matplotlib.pyplot as plt
 
 def normalize(img):
     min = img.min()
@@ -20,8 +22,10 @@ def normalize(img):
 N_BANDS = 8
 N_CLASSES = 5  # buildings, roads, trees, crops and water
 CLASS_WEIGHTS = [0.2, 0.3, 0.1, 0.1, 0.3]
-N_EPOCHS = 150
+#N_EPOCHS = 150
 #N_EPOCHS = 50
+N_EPOCHS = 1
+
 UPCONV = True
 PATCH_SZ = 160   # should divide by 16
 BATCH_SIZE = 150
@@ -74,10 +78,46 @@ if __name__ == '__main__':
         csv_logger = CSVLogger('log_unet.csv', append=True, separator=';')
         tensorboard = TensorBoard(log_dir='./tensorboard_unet/', write_graph=True, write_images=True)
         #change verbosity from 2 to 1
-        model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
+        model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
                   verbose=1, shuffle=True,
                   callbacks=[model_checkpoint, csv_logger, tensorboard],
                   validation_data=(x_val, y_val))
+        predict = model.predict(x_val)
+        #create a confusion matrix
+        cm = confusion_matrix(y_val.argmax(axis=1), predict.argmax(axis=1))
+        print(cm)
+#        f = open('confusion_matrix.txt', 'w')
+#        f.write(cm)
+#        f.close()
+        #metrics
+#        loss, acc = model.evaluate(x_val, y_val, verbose=0) #evaluate testing data and calculate loss and accuracy
+#        print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
+        
+#        #plot training loss vs validation loss
+#        matplotlib.style.use('seaborn')
+#        epochs = len(model_fit_history.history['loss'])
+#        max_loss = max(max(model_fit_history.history['loss']), max(model_fit_history.history['val_loss']))
+#        plt.axis([0, epochs+1, 0, round(max_loss * 2.0) / 2 + 0.5])
+#        x = np.arange(1, epochs+1)
+#        plt.plot(x, model_fit_history.history['loss'])
+#        plt.plot(x, model_fit_history.history['val_loss'])
+#        plt.title('Training loss vs. Validation loss')
+#        plt.ylabel('Loss')
+#        plt.xlabel('Epoch')
+#        plt.legend(['Training', 'Validation'], loc='right')
+#        plt.show()
+#        #plot training accuracy vs validation accuracy
+#        matplotlib.style.use('seaborn')
+#        epochs = len(model_fit_history.history['acc'])
+#        plt.axis([0, epochs+1, 0, 1.2])
+#        x = np.arange(1, epochs+1)
+#        plt.plot(x, model_fit_history.history['acc'])
+#        plt.plot(x, model_fit_history.history['val_acc'])
+#        plt.title('Training accuracy vs. Validation accuracy')
+#        plt.ylabel('Accuracy')
+#        plt.xlabel('Epoch')
+#        plt.legend(['Training', 'Validation'], loc='right')
+#        plt.show()
         return model
 
     train_net()

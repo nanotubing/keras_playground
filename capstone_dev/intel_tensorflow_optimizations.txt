@@ -1,0 +1,2 @@
+default tensorflow build: 1139 seconds 18.9 minutes for epoch 1
+intel tensorflow build: 708 seconds 11.8 minutes

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tifffile as tiff
 
-from train_unet import weights_path, get_model, normalize, PATCH_SZ, N_CLASSES
+from train_unet import weights_path, get_model, normalize, PATCH_SZ, N_CLASSES, y_val
 
 
 def predict(x, model, patch_sz=160, n_classes=5):
@@ -123,7 +123,7 @@ if __name__ == '__main__':
             #print(temp[0][0][0], temp[3][12][13])
             print("Case 7", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp, mymat ]), axis=0 )
-
+     
     #print(mymat[0][0][0], mymat[3][12][13])
     map = picture_from_mask(mymat, 0.5)
     #mask = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])  # make channels first
