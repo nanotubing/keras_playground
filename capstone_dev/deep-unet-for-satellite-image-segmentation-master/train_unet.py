@@ -22,9 +22,9 @@ def normalize(img):
 N_BANDS = 8
 N_CLASSES = 5  # buildings, roads, trees, crops and water
 CLASS_WEIGHTS = [0.2, 0.3, 0.1, 0.1, 0.3]
-N_EPOCHS = 150
+#N_EPOCHS = 150
 #N_EPOCHS = 50
-#N_EPOCHS = 1
+N_EPOCHS = 1
 
 UPCONV = True
 PATCH_SZ = 160   # should divide by 16
@@ -63,32 +63,54 @@ if __name__ == '__main__':
         Y_DICT_VALIDATION[img_id] = mask[train_xsz:, :, :]
         print(img_id + ' read')
     print('Images were read')
+    
+    print("start train net")
+    x_train, y_train = get_patches(X_DICT_TRAIN, Y_DICT_TRAIN, n_patches=TRAIN_SZ, sz=PATCH_SZ)
+    x_val, y_val = get_patches(X_DICT_VALIDATION, Y_DICT_VALIDATION, n_patches=VAL_SZ, sz=PATCH_SZ)
+    model = get_model()
+    if os.path.isfile(weights_path):
+        model.load_weights(weights_path)
+    #model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_weights_only=True, save_best_only=True)
+    #early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto')
+    #reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, min_lr=0.00001)
+    model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_best_only=True)
+    csv_logger = CSVLogger('log_unet.csv', append=True, separator=';')
+    tensorboard = TensorBoard(log_dir='./tensorboard_unet/', write_graph=True, write_images=True)
+    #change verbosity from 2 to 1
+    model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
+              verbose=1, shuffle=True,
+              callbacks=[model_checkpoint, csv_logger, tensorboard],
+              validation_data=(x_val, y_val))
+    #create a confusion matrix
+#    y_pred = model.predict(x_val)
+#    y_pred_reshape = y_pred.reshape(1000, -1)
+#    y_val_reshape = y_val.reshape(1000, -1)
+#    cm = confusion_matrix(y_val_reshape, y_pred_reshape)
+#    print(cm)
+#    f = open('confusion_matrix.txt', 'w')
+#    f.write(cm)
+#    f.close()
 
-    def train_net():
-        print("start train net")
-        x_train, y_train = get_patches(X_DICT_TRAIN, Y_DICT_TRAIN, n_patches=TRAIN_SZ, sz=PATCH_SZ)
-        x_val, y_val = get_patches(X_DICT_VALIDATION, Y_DICT_VALIDATION, n_patches=VAL_SZ, sz=PATCH_SZ)
-        model = get_model()
-        if os.path.isfile(weights_path):
-            model.load_weights(weights_path)
-        #model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_weights_only=True, save_best_only=True)
-        #early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto')
-        #reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, min_lr=0.00001)
-        model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_best_only=True)
-        csv_logger = CSVLogger('log_unet.csv', append=True, separator=';')
-        tensorboard = TensorBoard(log_dir='./tensorboard_unet/', write_graph=True, write_images=True)
-        #change verbosity from 2 to 1
-        model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
-                  verbose=1, shuffle=True,
-                  callbacks=[model_checkpoint, csv_logger, tensorboard],
-                  validation_data=(x_val, y_val))
-        predict = model.predict(x_val)
-        #create a confusion matrix
-        cm = confusion_matrix(y_val.argmax(axis=1), predict.argmax(axis=1))
-        print(cm)
-#        f = open('confusion_matrix.txt', 'w')
-#        f.write(cm)
-#        f.close()
+#    def train_net():
+#        print("start train net")
+#        x_train, y_train = get_patches(X_DICT_TRAIN, Y_DICT_TRAIN, n_patches=TRAIN_SZ, sz=PATCH_SZ)
+#        x_val, y_val = get_patches(X_DICT_VALIDATION, Y_DICT_VALIDATION, n_patches=VAL_SZ, sz=PATCH_SZ)
+#        model = get_model()
+#        if os.path.isfile(weights_path):
+#            model.load_weights(weights_path)
+#        #model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_weights_only=True, save_best_only=True)
+#        #early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto')
+#        #reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, min_lr=0.00001)
+#        model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_best_only=True)
+#        csv_logger = CSVLogger('log_unet.csv', append=True, separator=';')
+#        tensorboard = TensorBoard(log_dir='./tensorboard_unet/', write_graph=True, write_images=True)
+#        #change verbosity from 2 to 1
+#        model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
+#                  verbose=1, shuffle=True,
+#                  callbacks=[model_checkpoint, csv_logger, tensorboard],
+#                  validation_data=(x_val, y_val))
+
+
         #metrics
 #        loss, acc = model.evaluate(x_val, y_val, verbose=0) #evaluate testing data and calculate loss and accuracy
 #        print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
@@ -118,6 +140,8 @@ if __name__ == '__main__':
 #        plt.xlabel('Epoch')
 #        plt.legend(['Training', 'Validation'], loc='right')
 #        plt.show()
-        return model
+#        return model
 
-    train_net()
+
+#    train_net()
+        
