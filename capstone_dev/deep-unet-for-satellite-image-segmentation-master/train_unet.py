@@ -24,7 +24,7 @@ N_CLASSES = 5  # buildings, roads, trees, crops and water
 CLASS_WEIGHTS = [0.2, 0.3, 0.1, 0.1, 0.3]
 #N_EPOCHS = 150
 #N_EPOCHS = 50
-N_EPOCHS = 1
+N_EPOCHS = 3
 
 UPCONV = True
 PATCH_SZ = 160   # should divide by 16
