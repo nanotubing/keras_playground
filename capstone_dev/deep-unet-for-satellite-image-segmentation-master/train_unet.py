@@ -90,6 +90,38 @@ if __name__ == '__main__':
 #    f = open('confusion_matrix.txt', 'w')
 #    f.write(cm)
 #    f.close()
+    #metrics
+    loss, acc = model.evaluate(x_val, y_val, verbose=0) #evaluate testing data and calculate loss and accuracy
+    print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
+        
+    #plot training loss vs validation loss
+    matplotlib.style.use('seaborn')
+    epochs = len(model_fit_history.history['loss'])
+    max_loss = max(max(model_fit_history.history['loss']), max(model_fit_history.history['val_loss']))
+    plt.axis([0, epochs+1, 0, round(max_loss * 2.0) / 2 + 0.5])
+    x = np.arange(1, epochs+1)
+    plt.plot(x, model_fit_history.history['loss'])
+    plt.plot(x, model_fit_history.history['val_loss'])
+    plt.title('Training loss vs. Validation loss')
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend(['Training', 'Validation'], loc='right')
+    plt.savefig('output\\loss.png', bbox_inches='tight')
+#    plt.show()
+#   #plot training accuracy vs validation accuracy
+    matplotlib.style.use('seaborn')
+    epochs = len(model_fit_history.history['acc'])
+    plt.axis([0, epochs+1, 0, 1.2])
+    x = np.arange(1, epochs+1)
+    plt.plot(x, model_fit_history.history['acc'])
+    plt.plot(x, model_fit_history.history['val_acc'])
+    plt.title('Training accuracy vs. Validation accuracy')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Epoch')
+    plt.legend(['Training', 'Validation'], loc='right')
+    plt.savefig('output\\accuracy.png', bbox_inches='tight')
+#    plt.show()
+    
 
 #    def train_net():
 #        print("start train net")
@@ -111,35 +143,7 @@ if __name__ == '__main__':
 #                  validation_data=(x_val, y_val))
 
 
-        #metrics
-#        loss, acc = model.evaluate(x_val, y_val, verbose=0) #evaluate testing data and calculate loss and accuracy
-#        print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
-        
-#        #plot training loss vs validation loss
-#        matplotlib.style.use('seaborn')
-#        epochs = len(model_fit_history.history['loss'])
-#        max_loss = max(max(model_fit_history.history['loss']), max(model_fit_history.history['val_loss']))
-#        plt.axis([0, epochs+1, 0, round(max_loss * 2.0) / 2 + 0.5])
-#        x = np.arange(1, epochs+1)
-#        plt.plot(x, model_fit_history.history['loss'])
-#        plt.plot(x, model_fit_history.history['val_loss'])
-#        plt.title('Training loss vs. Validation loss')
-#        plt.ylabel('Loss')
-#        plt.xlabel('Epoch')
-#        plt.legend(['Training', 'Validation'], loc='right')
-#        plt.show()
-#        #plot training accuracy vs validation accuracy
-#        matplotlib.style.use('seaborn')
-#        epochs = len(model_fit_history.history['acc'])
-#        plt.axis([0, epochs+1, 0, 1.2])
-#        x = np.arange(1, epochs+1)
-#        plt.plot(x, model_fit_history.history['acc'])
-#        plt.plot(x, model_fit_history.history['val_acc'])
-#        plt.title('Training accuracy vs. Validation accuracy')
-#        plt.ylabel('Accuracy')
-#        plt.xlabel('Epoch')
-#        plt.legend(['Training', 'Validation'], loc='right')
-#        plt.show()
+     
 #        return model
 
 
