@@ -1,1 +1,5 @@
+__pycache__
 data/
+output/
+tensorboard_unet/
+weights
