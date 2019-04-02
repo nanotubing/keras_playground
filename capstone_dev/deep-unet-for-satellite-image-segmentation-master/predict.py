@@ -74,6 +74,14 @@ if __name__ == '__main__':
 #    planet_test = True
     model = get_model()
     model.load_weights(weights_path)
+    
+    overwrite_check = ['output/planet_classtest_trim.tif', 'output/result.tif', 'output/map.tif', 'output/planet_result.tif', 'output/planet_map.tif']
+    for file in overwrite_check:
+        if os.path.exists(file):
+            print('ERROR: file {0} already exists. Please rename or delete the following files before training your network:'.format(file))
+            print(*overwrite_check, sep = '\n')
+            sys.exit()
+            
     if planet_test == False:
         test_id = 'test'
         img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
@@ -85,7 +93,7 @@ if __name__ == '__main__':
         img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
         #trim the planet image to the same dimensions as training data
         img_fixed2 = img_fixed2[:848, :837, :]
-        tiff.imsave('planet_classtest_trim.tif', img_fixed2)
+        tiff.imsave('output/planet_classtest_trim.tif', img_fixed2)
         img = img_fixed2
         
     for i in range(7):
@@ -130,9 +138,9 @@ if __name__ == '__main__':
     #map = picture_from_mask(mask, 0.5)
     
     if planet_test == False:
-        tiff.imsave('result.tif', (255*mymat).astype('uint8'))
-        tiff.imsave('map.tif', map)
+        tiff.imsave('output/result.tif', (255*mymat).astype('uint8'))
+        tiff.imsave('output/map.tif', map)
     elif planet_test == True:
-        tiff.imsave('planet_result.tif', (255*mymat).astype('uint8'))
-        tiff.imsave('planet_map.tif', map)
+        tiff.imsave('output/planet_result.tif', (255*mymat).astype('uint8'))
+        tiff.imsave('output/planet_map.tif', map)
     
