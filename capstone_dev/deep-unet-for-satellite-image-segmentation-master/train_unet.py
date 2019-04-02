@@ -49,7 +49,7 @@ if __name__ == '__main__':
     X_DICT_VALIDATION = dict()
     Y_DICT_VALIDATION = dict()
     
-    overwrite_check = ['weights/unet_weights.hdf5', 'log_unet.csv', 'output/loss.png', 'output/accuracy.png']
+    overwrite_check = ['weights/unet_weights.hdf5', 'output/log_unet.csv', 'output/loss.png', 'output/accuracy.png']
     for file in overwrite_check:
         if os.path.exists(file):
             print('ERROR: file {0} already exists. Please rename or delete the following files before training your network:'.format(file))
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         X_DICT_TRAIN[img_id] = img_m[:train_xsz, :, :]
         Y_DICT_TRAIN[img_id] = mask[:train_xsz, :, :]
         X_DICT_VALIDATION[img_id] = img_m[train_xsz:, :, :]
-        Y_DICT_`VALIDATION[img_id] = mask[train_xsz:, :, :]
+        Y_DICT_VALIDATION[img_id] = mask[train_xsz:, :, :]
         print(img_id + ' read')
     print('Images were read')
     
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     #early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto')
     #reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, min_lr=0.00001)
     model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_best_only=True)
-    csv_logger = CSVLogger('log_unet.csv', append=True, separator=';')
+    csv_logger = CSVLogger('output/log_unet.csv', append=True, separator=';')
     tensorboard = TensorBoard(log_dir='./tensorboard_unet/', write_graph=True, write_images=True)
     #change verbosity from 2 to 1
     model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
