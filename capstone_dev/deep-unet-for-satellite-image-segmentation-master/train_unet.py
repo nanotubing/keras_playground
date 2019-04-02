@@ -125,30 +125,4 @@ if __name__ == '__main__':
     plt.xlabel('Epoch')
     plt.legend(['Training', 'Validation'], loc='right')
     plt.savefig('output\\accuracy.png', bbox_inches='tight')    
-
-#    def train_net():
-#        print("start train net")
-#        x_train, y_train = get_patches(X_DICT_TRAIN, Y_DICT_TRAIN, n_patches=TRAIN_SZ, sz=PATCH_SZ)
-#        x_val, y_val = get_patches(X_DICT_VALIDATION, Y_DICT_VALIDATION, n_patches=VAL_SZ, sz=PATCH_SZ)
-#        model = get_model()
-#        if os.path.isfile(weights_path):
-#            model.load_weights(weights_path)
-#        #model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_weights_only=True, save_best_only=True)
-#        #early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto')
-#        #reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, min_lr=0.00001)
-#        model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_best_only=True)
-#        csv_logger = CSVLogger('log_unet.csv', append=True, separator=';')
-#        tensorboard = TensorBoard(log_dir='./tensorboard_unet/', write_graph=True, write_images=True)
-#        #change verbosity from 2 to 1
-#        model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
-#                  verbose=1, shuffle=True,
-#                  callbacks=[model_checkpoint, csv_logger, tensorboard],
-#                  validation_data=(x_val, y_val))
-
-
-     
-#        return model
-
-
-#    train_net()
         
