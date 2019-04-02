@@ -81,6 +81,8 @@ if __name__ == '__main__':
               verbose=1, shuffle=True,
               callbacks=[model_checkpoint, csv_logger, tensorboard],
               validation_data=(x_val, y_val))
+    
+    #generate metrics and graphs
     #create a confusion matrix
 #    y_pred = model.predict(x_val)
 #    y_pred_reshape = y_pred.reshape(1000, -1)
@@ -107,7 +109,6 @@ if __name__ == '__main__':
     plt.xlabel('Epoch')
     plt.legend(['Training', 'Validation'], loc='right')
     plt.savefig('output\\loss.png', bbox_inches='tight')
-#    plt.show()
 #   #plot training accuracy vs validation accuracy
     matplotlib.style.use('seaborn')
     epochs = len(model_fit_history.history['acc'])
@@ -119,9 +120,7 @@ if __name__ == '__main__':
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['Training', 'Validation'], loc='right')
-    plt.savefig('output\\accuracy.png', bbox_inches='tight')
-#    plt.show()
-    
+    plt.savefig('output\\accuracy.png', bbox_inches='tight')    
 
 #    def train_net():
 #        print("start train net")
