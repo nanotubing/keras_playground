@@ -1,2 +1,6 @@
-data/
 .DS_Store
+__pycache__
+data/
+output/
+tensorboard_unet/
+weights

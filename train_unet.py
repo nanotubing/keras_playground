@@ -1,7 +1,7 @@
 from unet_model import *
 from gen_patches import *
 
-import os.path
+import os.path, sys
 import numpy as np
 import tifffile as tiff
 from keras.callbacks import CSVLogger
@@ -17,8 +17,6 @@ def normalize(img):
     x = 2.0 * (img - min) / (max - min) - 1.0
     return x
 
-
-
 N_BANDS = 8
 N_CLASSES = 5  # buildings, roads, trees, crops and water
 CLASS_WEIGHTS = [0.2, 0.3, 0.1, 0.1, 0.3]
@@ -32,7 +30,6 @@ BATCH_SIZE = 150
 #TRAIN_SZ = 4000  # train size
 TRAIN_SZ = 2000
 VAL_SZ = 1000    # validation size
-
 
 def get_model():
     return unet_model(N_CLASSES, PATCH_SZ, n_channels=N_BANDS, upconv=UPCONV, class_weights=CLASS_WEIGHTS)
@@ -51,6 +48,13 @@ if __name__ == '__main__':
     Y_DICT_TRAIN = dict()
     X_DICT_VALIDATION = dict()
     Y_DICT_VALIDATION = dict()
+    
+    overwrite_check = ['weights/unet_weights.hdf5', 'output/log_unet.csv', 'output/loss.png', 'output/accuracy.png']
+    for file in overwrite_check:
+        if os.path.exists(file):
+            print('ERROR: file {0} already exists. Please rename or delete the following files before training your network:'.format(file))
+            print(*overwrite_check, sep = '\n')
+            sys.exit()
 
     print('Reading images')
     for img_id in trainIds:
@@ -74,13 +78,15 @@ if __name__ == '__main__':
     #early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto')
     #reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, min_lr=0.00001)
     model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_best_only=True)
-    csv_logger = CSVLogger('log_unet.csv', append=True, separator=';')
+    csv_logger = CSVLogger('output/log_unet.csv', append=True, separator=';')
     tensorboard = TensorBoard(log_dir='./tensorboard_unet/', write_graph=True, write_images=True)
     #change verbosity from 2 to 1
     model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
               verbose=1, shuffle=True,
               callbacks=[model_checkpoint, csv_logger, tensorboard],
               validation_data=(x_val, y_val))
+    
+    #generate metrics and graphs
     #create a confusion matrix
 #    y_pred = model.predict(x_val)
 #    y_pred_reshape = y_pred.reshape(1000, -1)
@@ -90,7 +96,7 @@ if __name__ == '__main__':
 #    f = open('confusion_matrix.txt', 'w')
 #    f.write(cm)
 #    f.close()
-    #metrics
+    metrics
     loss, acc = model.evaluate(x_val, y_val, verbose=0) #evaluate testing data and calculate loss and accuracy
     print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
         
@@ -107,8 +113,7 @@ if __name__ == '__main__':
     plt.xlabel('Epoch')
     plt.legend(['Training', 'Validation'], loc='right')
     plt.savefig('output\\loss.png', bbox_inches='tight')
-#    plt.show()
-#   #plot training accuracy vs validation accuracy
+   #plot training accuracy vs validation accuracy
     matplotlib.style.use('seaborn')
     epochs = len(model_fit_history.history['acc'])
     plt.axis([0, epochs+1, 0, 1.2])
@@ -119,33 +124,5 @@ if __name__ == '__main__':
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['Training', 'Validation'], loc='right')
-    plt.savefig('output\\accuracy.png', bbox_inches='tight')
-#    plt.show()
-    
-
-#    def train_net():
-#        print("start train net")
-#        x_train, y_train = get_patches(X_DICT_TRAIN, Y_DICT_TRAIN, n_patches=TRAIN_SZ, sz=PATCH_SZ)
-#        x_val, y_val = get_patches(X_DICT_VALIDATION, Y_DICT_VALIDATION, n_patches=VAL_SZ, sz=PATCH_SZ)
-#        model = get_model()
-#        if os.path.isfile(weights_path):
-#            model.load_weights(weights_path)
-#        #model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_weights_only=True, save_best_only=True)
-#        #early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto')
-#        #reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, min_lr=0.00001)
-#        model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_best_only=True)
-#        csv_logger = CSVLogger('log_unet.csv', append=True, separator=';')
-#        tensorboard = TensorBoard(log_dir='./tensorboard_unet/', write_graph=True, write_images=True)
-#        #change verbosity from 2 to 1
-#        model_fit_history = model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=N_EPOCHS,
-#                  verbose=1, shuffle=True,
-#                  callbacks=[model_checkpoint, csv_logger, tensorboard],
-#                  validation_data=(x_val, y_val))
-
-
-     
-#        return model
-
-
-#    train_net()
+    plt.savefig('output\\accuracy.png', bbox_inches='tight')    
         

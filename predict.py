@@ -1,9 +1,9 @@
-import math
+import math, os.path, sys
 import numpy as np
 import matplotlib.pyplot as plt
 import tifffile as tiff
 
-from train_unet import weights_path, get_model, normalize, PATCH_SZ, N_CLASSES, y_val
+from train_unet import weights_path, get_model, normalize, PATCH_SZ, N_CLASSES
 
 
 def predict(x, model, patch_sz=160, n_classes=5):
@@ -74,6 +74,14 @@ if __name__ == '__main__':
 #    planet_test = True
     model = get_model()
     model.load_weights(weights_path)
+    
+    overwrite_check = ['output/planet_classtest_trim.tif', 'output/result.tif', 'output/map.tif', 'output/planet_result.tif', 'output/planet_map.tif']
+    for file in overwrite_check:
+        if os.path.exists(file):
+            print('ERROR: file {0} already exists. Please rename or delete the following files before training your network:'.format(file))
+            print(*overwrite_check, sep = '\n')
+            sys.exit()
+            
     if planet_test == False:
         test_id = 'test'
         img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
@@ -85,54 +93,44 @@ if __name__ == '__main__':
         img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
         #trim the planet image to the same dimensions as training data
         img_fixed2 = img_fixed2[:848, :837, :]
-        tiff.imsave('planet_classtest_trim.tif', img_fixed2)
+        tiff.imsave('output/planet_classtest_trim.tif', img_fixed2)
         img = img_fixed2
         
     for i in range(7):
         if i == 0:  # reverse first dimension
             mymat = predict(img[::-1,:,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
-            #print(mymat[0][0][0], mymat[3][12][13])
             print("Case 1",img.shape, mymat.shape)
         elif i == 1:    # reverse second dimension
             temp = predict(img[:,::-1,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
-            #print(temp[0][0][0], temp[3][12][13])
             print("Case 2", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp[:,::-1,:], mymat ]), axis=0 )
         elif i == 2:    # transpose(interchange) first and second dimensions
             temp = predict(img.transpose([1,0,2]), model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
-            #print(temp[0][0][0], temp[3][12][13])
             print("Case 3", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp.transpose(0,2,1), mymat ]), axis=0 )
         elif i == 3:
             temp = predict(np.rot90(img, 1), model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
-            #print(temp.transpose([2,0,1])[0][0][0], temp.transpose([2,0,1])[3][12][13])
             print("Case 4", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ np.rot90(temp, -1).transpose([2,0,1]), mymat ]), axis=0 )
         elif i == 4:
             temp = predict(np.rot90(img,2), model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
-            #print(temp.transpose([2,0,1])[0][0][0], temp.transpose([2,0,1])[3][12][13])
             print("Case 5", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ np.rot90(temp,-2).transpose([2,0,1]), mymat ]), axis=0 )
         elif i == 5:
             temp = predict(np.rot90(img,3), model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
-            #print(temp.transpose([2,0,1])[0][0][0], temp.transpose([2,0,1])[3][12][13])
             print("Case 6", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ np.rot90(temp, -3).transpose(2,0,1), mymat ]), axis=0 )
         else:
             temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
-            #print(temp[0][0][0], temp[3][12][13])
             print("Case 7", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp, mymat ]), axis=0 )
      
-    #print(mymat[0][0][0], mymat[3][12][13])
     map = picture_from_mask(mymat, 0.5)
-    #mask = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])  # make channels first
-    #map = picture_from_mask(mask, 0.5)
     
     if planet_test == False:
-        tiff.imsave('result.tif', (255*mymat).astype('uint8'))
-        tiff.imsave('map.tif', map)
+        tiff.imsave('output/result.tif', (255*mymat).astype('uint8'))
+        tiff.imsave('output/map.tif', map)
     elif planet_test == True:
-        tiff.imsave('planet_result.tif', (255*mymat).astype('uint8'))
-        tiff.imsave('planet_map.tif', map)
+        tiff.imsave('output/planet_result.tif', (255*mymat).astype('uint8'))
+        tiff.imsave('output/planet_map.tif', map)
     
