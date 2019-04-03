@@ -7,10 +7,6 @@ library(raster, rgdal)
 sat_image = raster("data/planet_training/img/20180412_143155_1003_1B_AnalyticMS.tif")
 to_mask = raster("../make_mask/pilot_area_master.tif")
 
-for(year in 1:6){
-  m = c(-Inf, )
-}
-
 matrix1 = c(-Inf, 0.8, 0, 0.9, 1.1, 1, 1.2, Inf, 0)
 reclass1 = matrix(matrix1, ncol = 3, byrow = true)
 mask_class1 = reclassify(to_mask)
