@@ -15,15 +15,6 @@ matrix5 = c(-Inf, 4.8, 0, 4.9, 5.1, 1, 5.2, Inf, 0)
 matrix6 = c(-Inf, 5.8, 0, 5.9, 6.1, 1, 6.2, Inf, 0)
 matrixlist = list("matrix1", "matrix2", "matrix3", "matrix4", "matrix5", "matrix6")
 
-# for (i in matrixlist){
-#   reclass = matrix(i, ncol = 3, byrow = TRUE)
-#   mask_class = reclassify(to_mask, reclass)
-#   # mask_class_18n = projectRaster(mask_class, crs = "+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
-#   # rm(mask_class)
-#   counter = substr(i, nchar(i)-0, nchar(i))
-#   writeRaster(paste(mask_class, counter), 'output/mask_class1.tif')
-# }
-
 reclass1 = matrix(matrix1, ncol = 3, byrow = TRUE)
 mask_class1 = reclassify(to_mask, reclass1)
 writeRaster(mask_class1, 'output/mask_class1.tif')
