@@ -5,7 +5,7 @@ install.packages("rgdal")
 library(raster, rgdal)
 
 to_mask = raster("../make_mask/pilot_area_master.tif")
-to_mask_18n = projectRaster(to_mask, crs = "+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+to_mask_18n = projectRaster(to_mask, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
 
 matrix1 = c(-Inf, 0.8, 0, 0.9, 1.1, 1, 1.2, Inf, 0)
 matrix2 = c(-Inf, 1.8, 0, 1.9, 2.1, 1, 2.2, Inf, 0)
