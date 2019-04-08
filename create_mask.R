@@ -16,27 +16,27 @@ matrix6 = c(-Inf, 5.8, 0, 5.9, 6.1, 1, 6.2, Inf, 0)
 matrixlist = list("matrix1", "matrix2", "matrix3", "matrix4", "matrix5", "matrix6")
 
 reclass1 = matrix(matrix1, ncol = 3, byrow = TRUE)
-mask_class1 = reclassify(to_mask, reclass1)
+mask_class1 = reclassify(to_mask_18n, reclass1)
 writeRaster(mask_class1, 'output/mask_class1.tif')
 
 reclass2 = matrix(matrix2, ncol = 3, byrow = TRUE)
-mask_class2 = reclassify(to_mask, reclass2)
+mask_class2 = reclassify(to_mask_18n, reclass2)
 writeRaster(mask_class2, 'output/mask_class2.tif')
 
 reclass3 = matrix(matrix3, ncol = 3, byrow = TRUE)
-mask_class3 = reclassify(to_mask, reclass3)
+mask_class3 = reclassify(to_mask_18n, reclass3)
 writeRaster(mask_class3, 'output/mask_class3.tif')
 
 reclass4 = matrix(matrix4, ncol = 3, byrow = TRUE)
-mask_class4 = reclassify(to_mask, reclass4)
+mask_class4 = reclassify(to_mask_18n, reclass4)
 writeRaster(mask_class4, 'output/mask_class4.tif')
 
 reclass5 = matrix(matrix5, ncol = 3, byrow = TRUE)
-mask_class5 = reclassify(to_mask, reclass5)
+mask_class5 = reclassify(to_mask_18n, reclass5)
 writeRaster(mask_class5, 'output/mask_class5.tif')
 
 reclass6 = matrix(matrix6, ncol = 3, byrow = TRUE)
-mask_class6 = reclassify(to_mask, reclass6)
+mask_class6 = reclassify(to_mask_18n, reclass6)
 writeRaster(mask_class6, 'output/mask_class6.tif')
 
 mask_stack = stack(mask_class1, mask_class2, mask_class3, mask_class4, mask_class5, mask_class6)
