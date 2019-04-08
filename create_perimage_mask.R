@@ -5,6 +5,8 @@ install.packages("rgdal")
 library(raster, rgdal)
 
 big_mask = raster("output/maskclass_all.tif")
+big_mask_18n = projectRaster(big_mask, crs = "+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+
 img_dir = "data/planet_training/img"
 images = dir()
 mask_dir = "data/planet_training/mask"
