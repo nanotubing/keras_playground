@@ -45,7 +45,8 @@ if not os.path.exists(weights_path):
 weights_path += '/unet_weights.hdf5'
 
 #trainIds = [str(i).zfill(2) for i in range(1, 25)]  # all availiable ids: from "01" to "24"
-trainIds = [ os.path.splitext(file)[0] for file in os.listdir(image_path)]
+#trainIds = [ os.path.splitext(file)[0] for file in os.listdir(image_path)]
+trainIds = [os.path.splitext(os.path.basename(file))[0] for file in glob.glob('{}/*_MAT*.tif'.format(image_path))]
 
 if __name__ == '__main__':
     X_DICT_TRAIN = dict()
