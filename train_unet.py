@@ -44,9 +44,8 @@ if not os.path.exists(weights_path):
     os.makedirs(weights_path)
 weights_path += '/unet_weights.hdf5'
 
-trainIds = [str(i).zfill(2) for i in range(1, 25)]  # all availiable ids: from "01" to "24"
-
-for filename in os.listdir(directory):
+#trainIds = [str(i).zfill(2) for i in range(1, 25)]  # all availiable ids: from "01" to "24"
+trainIds = [ os.path.splitext(file)[0] for file in os.listdir(image_path)]
 
 if __name__ == '__main__':
     X_DICT_TRAIN = dict()
@@ -63,8 +62,8 @@ if __name__ == '__main__':
 
     print('Reading images')
     for img_id in trainIds:
-        img_m = normalize(tiff.imread(image_path.format(img_id)).transpose([1, 2, 0]))
-        mask = tiff.imread(mask_path.format(img_id)).transpose([1, 2, 0]) / 255
+        img_m = normalize(tiff.imread(image_path+'{}.tif'.format(img_id)).transpose([1, 2, 0]))
+        mask = tiff.imread(mask_path+'{}_mask.tif'.format(img_id[:-11])).transpose([1, 2, 0]) / 255
         train_xsz = int(3/4 * img_m.shape[0])  # use 75% of image as train and 25% for validation
         X_DICT_TRAIN[img_id] = img_m[:train_xsz, :, :]
         Y_DICT_TRAIN[img_id] = mask[:train_xsz, :, :]
