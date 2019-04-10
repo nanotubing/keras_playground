@@ -22,7 +22,7 @@ N_CLASSES = 6  # buildings, roads, trees, crops and water
 CLASS_WEIGHTS = [0.2, 0.3, 0.1, 0.1, 0.3, 0.2]
 #N_EPOCHS = 150
 #N_EPOCHS = 50
-N_EPOCHS = 3
+N_EPOCHS = 10
 
 UPCONV = True
 PATCH_SZ = 160   # should divide by 16
@@ -101,7 +101,7 @@ if __name__ == '__main__':
 #    f = open('confusion_matrix.txt', 'w')
 #    f.write(cm)
 #    f.close()
-    metrics
+#    metrics
     loss, acc = model.evaluate(x_val, y_val, verbose=0) #evaluate testing data and calculate loss and accuracy
     print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
         
