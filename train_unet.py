@@ -65,6 +65,8 @@ if __name__ == '__main__':
     for img_id in trainIds:
         img_m = normalize(tiff.imread(image_path+'{}.tif'.format(img_id)))
         mask = tiff.imread(mask_path+'{}_mask.tif'.format(img_id[:-11])) / 255
+        if img_m.shape[0:2] < mask.shape[0:2]:
+            img_m.resize(mask.shape[0], mask.shape[1], 4)
         train_xsz = int(3/4 * img_m.shape[0])  # use 75% of image as train and 25% for validation
         X_DICT_TRAIN[img_id] = img_m[:train_xsz, :, :]
         Y_DICT_TRAIN[img_id] = mask[:train_xsz, :, :]
