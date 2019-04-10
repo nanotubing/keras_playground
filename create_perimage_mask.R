@@ -1,6 +1,7 @@
 remove(list=ls()) 
 install.packages("raster")
 install.packages("rgdal")
+
 setwd("~/GitHub/keras_playground")
 library(raster, rgdal)
 

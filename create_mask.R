@@ -6,7 +6,6 @@ setwd("~/GitHub/keras_playground")
 library(raster, rgdal)
 
 to_mask = raster("../make_mask/pilot_area_master.tif")
-# to_mask_18n = projectRaster(to_mask, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
 
 matrix1 = c(NA, NA, 0, -Inf, 0.8, 0, 0.9, 1.1, 1, 1.2, Inf, 0)
 matrix2 = c(NA, NA, 0, -Inf, 1.8, 0, 1.9, 2.1, 1, 2.2, Inf, 0)
@@ -17,31 +16,36 @@ matrix6 = c(NA, NA, 0, -Inf, 5.8, 0, 5.9, 6.1, 1, 6.2, Inf, 0)
 
 reclass1 = matrix(matrix1, ncol = 3, byrow = TRUE)
 mask_class1 = reclassify(to_mask, reclass1)
+
 reclass2 = matrix(matrix2, ncol = 3, byrow = TRUE)
 mask_class2 = reclassify(to_mask, reclass2)
+
 reclass3 = matrix(matrix3, ncol = 3, byrow = TRUE)
 mask_class3 = reclassify(to_mask, reclass3)
+
 reclass4 = matrix(matrix4, ncol = 3, byrow = TRUE)
 mask_class4 = reclassify(to_mask, reclass4)
+
 reclass5 = matrix(matrix5, ncol = 3, byrow = TRUE)
 mask_class5 = reclassify(to_mask, reclass5)
+
 reclass6 = matrix(matrix6, ncol = 3, byrow = TRUE)
 mask_class6 = reclassify(to_mask, reclass6)
 
 #search for infinte values in the rasters
-which(is.infinite(mask_class1@data@values))
-which(is.infinite(mask_class2@data@values))
-which(is.infinite(mask_class3@data@values))
-which(is.infinite(mask_class4@data@values))
-which(is.infinite(mask_class5@data@values))
-which(is.infinite(mask_class6@data@values))
+# which(is.infinite(mask_class1@data@values))
+# which(is.infinite(mask_class2@data@values))
+# which(is.infinite(mask_class3@data@values))
+# which(is.infinite(mask_class4@data@values))
+# which(is.infinite(mask_class5@data@values))
+# which(is.infinite(mask_class6@data@values))
 #search for NA values in the rasters
-which(is.na(mask_class1@data@values))
-which(is.na(mask_class2@data@values))
-which(is.na(mask_class3@data@values))
-which(is.na(mask_class4@data@values))
-which(is.na(mask_class5@data@values))
-which(is.na(mask_class6@data@values))
+# which(is.na(mask_class1@data@values))
+# which(is.na(mask_class2@data@values))
+# which(is.na(mask_class3@data@values))
+# which(is.na(mask_class4@data@values))
+# which(is.na(mask_class5@data@values))
+# which(is.na(mask_class6@data@values))
 
 writeRaster(mask_class1, 'output/mask_class1.tif', datatype='INT4S')
 writeRaster(mask_class2, 'output/mask_class2.tif', datatype='INT4S')
