@@ -93,7 +93,8 @@ if __name__ == '__main__':
         img = normalize(tiff.imread('data/mband/{}.tif'.format(image_id)).transpose([1,2,0]))   # make channels last
     elif planet_test == True:
 #        test_id = planet_test_image
-        img = normalize(tiff.imread(planet_imagedir+'{}.tif'.format(image_id)).transpose([1,0,2]))   # rearrange order for planet image
+        # rearranging order for planet image no longer necessary now that it matches training data
+        img = normalize(tiff.imread(planet_imagedir+'{}.tif'.format(image_id)))
         #    add 4 channels of 0 to array to predict planet image
 #        img_pad = ((0,0), (0,0), (0,4))
 #        img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
