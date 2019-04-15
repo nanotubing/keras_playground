@@ -5,7 +5,6 @@ import tifffile as tiff
 
 from train_unet import weights_path, get_model, normalize, PATCH_SZ, N_CLASSES
 
-
 def predict(x, model, patch_sz=160, n_classes=5):
     img_height = x.shape[0]
     img_width = x.shape[1]
@@ -70,8 +69,10 @@ def picture_from_mask(mask, threshold=0):
 if __name__ == '__main__':
     #are we running the predictions script against the built-in test data, or
     #a planet image?
-    planet_test = False
-#    planet_test = True
+#    planet_test = False
+    planet_test = True
+    planet_imagedir = 'data\planet_training\predict'
+    image_id = '20180412_143154_1003_1B_AnalyticMS'
     model = get_model()
     model.load_weights(weights_path)
     
@@ -83,18 +84,18 @@ if __name__ == '__main__':
             sys.exit()
             
     if planet_test == False:
-        test_id = 'test'
+        image_id = 'test'
         img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
     elif planet_test == True:
-        test_id = '20180104_143418_0f34_1B_AnalyticMS'
-        img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,0,2]))   # rearrange order for planet image
+#        test_id = planet_test_image
+        img = normalize(tiff.imread(planet_imagedir+'data/mband/{}.tif'.format(image_id)).transpose([1,0,2]))   # rearrange order for planet image
         #    add 4 channels of 0 to array to predict planet image
-        img_pad = ((0,0), (0,0), (0,4))
-        img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
+#        img_pad = ((0,0), (0,0), (0,4))
+#        img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
         #trim the planet image to the same dimensions as training data
-        img_fixed2 = img_fixed2[:848, :837, :]
-        tiff.imsave('output/planet_classtest_trim.tif', img_fixed2)
-        img = img_fixed2
+#        img_fixed2 = img_fixed2[:848, :837, :]
+        tiff.imsave('output/planet_classtest.tif', img_fixed2)
+#        img = img_fixed2
         
     for i in range(7):
         if i == 0:  # reverse first dimension
@@ -125,7 +126,8 @@ if __name__ == '__main__':
             print("Case 7", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp, mymat ]), axis=0 )
      
-    map = picture_from_mask(mymat, 0.5)
+        #create classified map
+#    map = picture_from_mask(mymat, 0.5)
     
     if planet_test == False:
         tiff.imsave('output/result.tif', (255*mymat).astype('uint8'))
