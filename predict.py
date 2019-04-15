@@ -35,10 +35,15 @@ def predict(x, model, patch_sz=160, n_classes=5):
     patches_predict = model.predict(patches_array, batch_size=4)
     prediction = np.zeros(shape=(extended_height, extended_width, n_classes), dtype=np.float32)
     for k in range(patches_predict.shape[0]):
+        print(k)
         i = k // npatches_horizontal
         j = k % npatches_vertical
         x0, x1 = i * patch_sz, (i + 1) * patch_sz
+        print(x0)
+        print(x1)
         y0, y1 = j * patch_sz, (j + 1) * patch_sz
+        print(y0)
+        print(y1)
         prediction[x0:x1, y0:y1, :] = patches_predict[k, :, :, :]
     return prediction[:img_height, :img_width, :]
 
@@ -85,7 +90,7 @@ if __name__ == '__main__':
             
     if planet_test == False:
         image_id = 'test'
-        img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
+        img = normalize(tiff.imread('data/mband/{}.tif'.format(image_id)).transpose([1,2,0]))   # make channels last
     elif planet_test == True:
 #        test_id = planet_test_image
         img = normalize(tiff.imread(planet_imagedir+'{}.tif'.format(image_id)).transpose([1,0,2]))   # rearrange order for planet image
