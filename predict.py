@@ -71,15 +71,15 @@ if __name__ == '__main__':
     #a planet image?
 #    planet_test = False
     planet_test = True
-    planet_imagedir = 'data\planet_training\predict'
+    planet_imagedir = 'data/planet_training/predict/'
     image_id = '20180412_143154_1003_1B_AnalyticMS'
     model = get_model()
     model.load_weights(weights_path)
     
-    overwrite_check = ['output/planet_classtest_trim.tif', 'output/result.tif', 'output/map.tif', 'output/planet_result.tif', 'output/planet_map.tif']
+    overwrite_check = ['output/planet_classtest.tif', 'output/result.tif', 'output/map.tif', 'output/planet_result.tif', 'output/planet_map.tif']
     for file in overwrite_check:
         if os.path.exists(file):
-            print('ERROR: file {0} already exists. Please rename or delete the following files before training your network:'.format(file))
+            print('ERROR: file {0} already exists. Please rename or delete the following files before creating predictions:'.format(file))
             print(*overwrite_check, sep = '\n')
             sys.exit()
             
@@ -88,13 +88,13 @@ if __name__ == '__main__':
         img = normalize(tiff.imread('data/mband/{}.tif'.format(test_id)).transpose([1,2,0]))   # make channels last
     elif planet_test == True:
 #        test_id = planet_test_image
-        img = normalize(tiff.imread(planet_imagedir+'data/mband/{}.tif'.format(image_id)).transpose([1,0,2]))   # rearrange order for planet image
+        img = normalize(tiff.imread(planet_imagedir+'{}.tif'.format(image_id)).transpose([1,0,2]))   # rearrange order for planet image
         #    add 4 channels of 0 to array to predict planet image
 #        img_pad = ((0,0), (0,0), (0,4))
 #        img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
         #trim the planet image to the same dimensions as training data
 #        img_fixed2 = img_fixed2[:848, :837, :]
-        tiff.imsave('output/planet_classtest.tif', img_fixed2)
+        tiff.imsave('output/planet_classtest.tif', img)
 #        img = img_fixed2
         
     for i in range(7):
