@@ -107,19 +107,19 @@ if __name__ == '__main__':
 #        img_fixed2 = np.pad(img, pad_width=img_pad, mode='constant', constant_values=0)
         #trim the planet image to the same dimensions as training data
 #        img_fixed2 = img_fixed2[:848, :837, :]
-        tiff.imsave('output/planet_classtest.tif', img)
+#        tiff.imsave('output/planet_classtest.tif', img)
 #        img = img_fixed2
         
     for i in range(7):
         if i == 0:  # reverse first dimension
-            mymat = predict(img[::-1,:,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
+            mymat = predict(img[::-1,:,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
             print("Case 1",img.shape, mymat.shape)
         elif i == 1:    # reverse second dimension
-            temp = predict(img[:,::-1,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
+            temp = predict(img[:,::-1,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
             print("Case 2", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp[:,::-1,:], mymat ]), axis=0 )
         elif i == 2:    # transpose(interchange) first and second dimensions
-            temp = predict(img.transpose([1,0,2]), model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
+            temp = predict(img.transpose([1,0,2]), model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
             print("Case 3", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp.transpose(0,2,1), mymat ]), axis=0 )
         elif i == 3:
@@ -135,7 +135,7 @@ if __name__ == '__main__':
             print("Case 6", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ np.rot90(temp, -3).transpose(2,0,1), mymat ]), axis=0 )
         else:
-            temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
+            temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
             print("Case 7", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp, mymat ]), axis=0 )
      
