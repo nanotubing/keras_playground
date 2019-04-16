@@ -112,7 +112,7 @@ if __name__ == '__main__':
         
     for i in range(7):
         if i == 0:  # reverse first dimension
-            mymat = predict(img[::-1,:,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
+            mymat = predict(img[::-1,:,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 1",img.shape, mymat.shape)
         elif i == 1:    # reverse second dimension
             temp = predict(img[:,::-1,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
