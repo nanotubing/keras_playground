@@ -83,8 +83,6 @@ if __name__ == '__main__':
     planet_test = True
     #set debug flag for additional output to help fix predict function
     x0_x1_debug = False
-    planet_imagedir = 'data/planet_training/predict/'
-    image_id = '20180412_143154_1003_1B_AnalyticMS'
     model = get_model()
     model.load_weights(weights_path)
     
@@ -97,9 +95,11 @@ if __name__ == '__main__':
             
     if planet_test == False:
         image_id = 'test'
+        weights_path = 'weights/150_epoch_unet_weights.hdf5'
         img = normalize(tiff.imread('data/mband/{}.tif'.format(image_id)).transpose([1,2,0]))   # make channels last
     elif planet_test == True:
-#        test_id = planet_test_image
+        planet_imagedir = 'data/planet_training/predict/'
+        image_id = '20180412_143154_1003_1B_AnalyticMS'
         # rearranging order for planet image no longer necessary now that it matches training data
         img = normalize(tiff.imread(planet_imagedir+'{}.tif'.format(image_id)))
         #    add 4 channels of 0 to array to predict planet image
