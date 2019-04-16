@@ -81,6 +81,7 @@ if __name__ == '__main__':
     #a planet image?
 #    planet_test = False
     planet_test = True
+    #set debug flag for additional output to help fix predict function
     x0_x1_debug = False
     planet_imagedir = 'data/planet_training/predict/'
     image_id = '20180412_143154_1003_1B_AnalyticMS'
