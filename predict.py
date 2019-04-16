@@ -35,15 +35,13 @@ def predict(x, model, patch_sz=160, n_classes=5):
     patches_predict = model.predict(patches_array, batch_size=4)
     prediction = np.zeros(shape=(extended_height, extended_width, n_classes), dtype=np.float32)
     for k in range(patches_predict.shape[0]):
-        print(k)
+        print("K: {}".format(k))
         i = k // npatches_horizontal
         j = k % npatches_vertical
         x0, x1 = i * patch_sz, (i + 1) * patch_sz
-        print(x0)
-        print(x1)
+        print("x0: {}, x1: {}".format(x0, x1))
         y0, y1 = j * patch_sz, (j + 1) * patch_sz
-        print(y0)
-        print(y1)
+        print("y0: {}, y1: {}".format(y0, y1))
         prediction[x0:x1, y0:y1, :] = patches_predict[k, :, :, :]
     return prediction[:img_height, :img_width, :]
 
