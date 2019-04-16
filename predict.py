@@ -35,13 +35,20 @@ def predict(x, model, patch_sz=160, n_classes=5):
     patches_predict = model.predict(patches_array, batch_size=4)
     prediction = np.zeros(shape=(extended_height, extended_width, n_classes), dtype=np.float32)
     for k in range(patches_predict.shape[0]):
-        print("K: {}".format(k))
+        #only print out debug info if flag is set
+        if x0_x1_debug == True:
+            print("K: {}".format(k))
         i = k // npatches_horizontal
         j = k % npatches_vertical
         x0, x1 = i * patch_sz, (i + 1) * patch_sz
-        print("x0: {}, x1: {}".format(x0, x1))
+        #only print out debug info if flag is set
+        if x0_x1_debug == True:
+            print("x0: {}, x1: {}".format(x0, x1))
+        #only print out debug info if flag is set
         y0, y1 = j * patch_sz, (j + 1) * patch_sz
-        print("y0: {}, y1: {}".format(y0, y1))
+        #only print out debug info if flag is set
+        if x0_x1_debug == True:
+            print("y0: {}, y1: {}".format(y0, y1))
         prediction[x0:x1, y0:y1, :] = patches_predict[k, :, :, :]
     return prediction[:img_height, :img_width, :]
 
@@ -74,6 +81,7 @@ if __name__ == '__main__':
     #a planet image?
 #    planet_test = False
     planet_test = True
+    x0_x1_debug = False
     planet_imagedir = 'data/planet_training/predict/'
     image_id = '20180412_143154_1003_1B_AnalyticMS'
     model = get_model()
