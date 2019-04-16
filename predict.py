@@ -115,7 +115,7 @@ if __name__ == '__main__':
             mymat = predict(img[::-1,:,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 1",img.shape, mymat.shape)
         elif i == 1:    # reverse second dimension
-            temp = predict(img[:,::-1,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
+            temp = predict(img[:,::-1,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 2", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp[:,::-1,:], mymat ]), axis=0 )
         elif i == 2:    # transpose(interchange) first and second dimensions
