@@ -82,7 +82,7 @@ if __name__ == '__main__':
 #    planet_test = False
     planet_test = True
     #set debug flag for additional output to help fix predict function
-    x0_x1_debug = False
+    x0_x1_debug = True
     model = get_model()
     model.load_weights(weights_path)
     
