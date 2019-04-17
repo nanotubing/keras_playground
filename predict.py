@@ -109,7 +109,8 @@ if __name__ == '__main__':
 #        img_fixed2 = img_fixed2[:848, :837, :]
 #        tiff.imsave('output/planet_classtest.tif', img)
 #        img = img_fixed2
-        
+    tiff.imsave('output/img01.tif', img)
+    
     for i in range(7):
         if i == 0:  # reverse first dimension
             mymat = predict(img[::-1,:,:], model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
@@ -144,9 +145,11 @@ if __name__ == '__main__':
             temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 7", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp, mymat ]), axis=0 )
-     
+    
+    tiff.imsave('output/mymat01.tif', mymat)
+#   tiff.imsave('output/mymat02.tif', (255*mymat).astype('uint8'))
         #create classified map
-#    map = picture_from_mask(mymat, 0.5)
+    map = picture_from_mask(mymat, 0.5)
     
     if planet_test == False:
         tiff.imsave('output/result.tif', (255*mymat).astype('uint8'))
