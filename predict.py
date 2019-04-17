@@ -82,7 +82,7 @@ if __name__ == '__main__':
 #    planet_test = False
     planet_test = True
     #set debug flag for additional output to help fix predict function
-    x0_x1_debug = True
+    x0_x1_debug = False
     model = get_model()
     model.load_weights(weights_path)
     
@@ -120,13 +120,16 @@ if __name__ == '__main__':
             mymat = np.mean( np.array([ temp[:,::-1,:], mymat ]), axis=0 )
         elif i == 2:    # transpose(interchange) first and second dimensions
             #transpose removed to hopefully unbreak script 4/16/19
-            temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES).transpose([2,0,1])
+            temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 3", temp.shape, mymat.shape)
-            mymat = np.mean( np.array([ temp.transpose(0,2,1), mymat ]), axis=0 )
+            mymat = np.mean( np.array([ temp, mymat ]), axis=0 )
         elif i == 3:
-            temp = predict(np.rot90(img, 1), model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
+            #was previously rotating by 90 deg. This and 180 deg rotation does not work with 
+            #rectangular images like ours.
+            #circle back and add augmentation after run completes
+            temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 4", temp.shape, mymat.shape)
-            mymat = np.mean( np.array([ np.rot90(temp, -1).transpose([2,0,1]), mymat ]), axis=0 )
+            mymat = np.mean( np.array([ temp, mymat ]), axis=0 )
         elif i == 4:
             temp = predict(np.rot90(img,2), model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 5", temp.shape, mymat.shape)
