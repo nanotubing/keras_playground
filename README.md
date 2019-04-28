@@ -1,5 +1,11 @@
-# managing python and r scripts used to learn keras and tensorflow  
-for my Capstone Project at [Temple University](https://bulletin.temple.edu/graduate/scd/cla/geographic-information-systems-psm/) I am investigating the use of Keras and Tensorflow in Python to perform image
-classification on Satellite Imagery in Colombia with the [Remote Sensing and Sustainability Lab](http://rsensus.org/en/). This is a repository for code I'm using for the classification. The full report of this work will be documented on [my personal website](https://claudeschrader.com)
+# Developing a pipeline using Python, keras, and tensorflow to classify satellite images from [Planet](https://www.planet.com). This work was performed with the [Remote Sensing and Sustainability Lab](http://rsensus.org/en/). This served as the Capstone Project of my [Professional Science Master's in GIS](https://bulletin.temple.edu/graduate/scd/cla/geographic-information-systems-psm/) at Temple University.
+
+The full report of this work will be documented on [my portfolio](https://claudeschrader.com)
+
+* train_unet.py is used to build the model. There are a number of configurable parameters such as number of Bands, number of classes, image size, patch size, and number of epochs.
+
+* predict.py is used to create predictions from an existing model, in this case classifying satellite images. It has a few configurable parameters, such as Image Directory, Image ID to predict against, and there is a debug flag that can enable more output to assist with troubleshooting.
+
+* the tools directory contains a number of smaller utility scripts used in this research
 
 This code is based on a fantastic [unet example](https://github.com/reachsumit/deep-unet-for-satellite-image-segmentation) designed for performing image segmentation on satellite imagery. Thanks to @reachsumit 
