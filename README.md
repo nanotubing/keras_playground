@@ -1,4 +1,5 @@
-# Developing a pipeline using Python, keras, and tensorflow to classify satellite images from [Planet](https://www.planet.com). This work was performed with the [Remote Sensing and Sustainability Lab](http://rsensus.org/en/). This served as the Capstone Project of my [Professional Science Master's in GIS](https://bulletin.temple.edu/graduate/scd/cla/geographic-information-systems-psm/) at Temple University.
+# Keras and Tensorflow for creating a classified map
+We are developing a pipeline using Python, Keras, and Tensorflow to classify satellite images from [Planet](https://www.planet.com). This work was performed with the [Remote Sensing and Sustainability Lab](http://rsensus.org/en/). This served as the Capstone Project of my [Professional Science Master's in GIS](https://bulletin.temple.edu/graduate/scd/cla/geographic-information-systems-psm/) at Temple University.
 
 The full report of this work will be documented on [my portfolio](https://claudeschrader.com)
 
