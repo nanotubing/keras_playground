@@ -7,6 +7,8 @@ The full report of this work will eventually be documented on [my portfolio](htt
 
 * predict.py is used to create predictions from an existing model, in this case classifying satellite images. It has a few configurable parameters, such as Image Directory, Image ID to predict against, and there is a debug flag that can enable more output to assist with troubleshooting.
 
+* gen_patches.py and unet_model.py are called by the two scripts above. It is not necessary to call these directly.
+
 * the tools directory contains a number of smaller utility scripts used in this research
 
 This code is based on a fantastic [unet example](https://github.com/reachsumit/deep-unet-for-satellite-image-segmentation) designed for performing image segmentation on satellite imagery. Thanks to @reachsumit 
