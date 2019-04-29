@@ -115,8 +115,9 @@ if __name__ == '__main__':
             print("Case 3", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ temp, mymat ]), axis=0 )
         elif i == 3:
-            #was previously rotating by 90 deg. This and 180 deg rotation does not work with 
+            #was previously rotating by 90 deg. This and 270 deg rotation does not work with 
             #rectangular images like ours.
+			#180 works fine bc its a flip
             #circle back and add augmentation after run completes
             temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 4", temp.shape, mymat.shape)
@@ -126,7 +127,7 @@ if __name__ == '__main__':
             print("Case 5", temp.shape, mymat.shape)
             mymat = np.mean( np.array([ np.rot90(temp,-2), mymat ]), axis=0 )
         elif i == 5:
-            #was a 180 degree rotation, which doesn't work with rectangular image
+            #was a 270 degree rotation, which doesn't work with rectangular image
             #removing for now, will replace
             temp = predict(img, model, patch_sz=PATCH_SZ, n_classes=N_CLASSES)
             print("Case 6", temp.shape, mymat.shape)
