@@ -23,17 +23,20 @@ def get_rand_patch(img, mask, sz=160):
         patch_img = patch_img[:,::-1,:]
         patch_mask = patch_mask[:,::-1,:]
     elif random_transformation == 3:    # transpose(interchange) first and second dimensions
-        patch_img = patch_img.transpose([1,0,2])
-        patch_mask = patch_mask.transpose([1,0,2])
+        #remove transpose
+#        patch_img = patch_img.transpose([1,0,2])
+#        patch_mask = patch_mask.transpose([1,0,2])
     elif random_transformation == 4:
-        patch_img = np.rot90(patch_img, 1)
-        patch_mask = np.rot90(patch_mask, 1)
+        # remove 90 degree rotation
+#        patch_img = np.rot90(patch_img, 1)
+#        patch_mask = np.rot90(patch_mask, 1)
     elif random_transformation == 5:
         patch_img = np.rot90(patch_img, 2)
         patch_mask = np.rot90(patch_mask, 2)
     elif random_transformation == 6:
-        patch_img = np.rot90(patch_img, 3)
-        patch_mask = np.rot90(patch_mask, 3)
+        #remove 270 degree rotation
+#        patch_img = np.rot90(patch_img, 3)
+#        patch_mask = np.rot90(patch_mask, 3)
     else:
         pass
 
