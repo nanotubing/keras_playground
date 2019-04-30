@@ -13,8 +13,8 @@ def normalize(img):
     x = 2.0 * (img - min) / (max - min) - 1.0
     return x
 
-image_path = './data/planet_training/img/'
-mask_path = './data/planet_training/mask/'
+image_path = '../data/planet_training/img/'
+mask_path = '../data/planet_training/mask/'
 
 trainIds = [os.path.splitext(os.path.basename(file))[0] for file in glob.glob('{}/*_MAT*.tif'.format(image_path))]
 
