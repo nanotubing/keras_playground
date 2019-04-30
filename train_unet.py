@@ -21,8 +21,8 @@ N_BANDS = 4
 N_CLASSES = 6  # buildings, roads, trees, crops and water
 CLASS_WEIGHTS = [0.2, 0.3, 0.1, 0.1, 0.3, 0.2]
 #N_EPOCHS = 150
-N_EPOCHS = 50
-#N_EPOCHS = 10
+#N_EPOCHS = 50
+N_EPOCHS = 10
 
 UPCONV = True
 PATCH_SZ = 160   # should divide by 16
