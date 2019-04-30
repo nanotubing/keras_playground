@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Apr 10 11:15:30 2019
-
-@author: tuj53509
 """
 
 import os, sys, glob
