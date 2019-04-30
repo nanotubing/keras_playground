@@ -8,6 +8,7 @@ from keras.callbacks import CSVLogger
 from keras.callbacks import TensorBoard
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 from sklearn.metrics import accuracy_score, f1_score, classification_report, confusion_matrix
+from sklearn.utils import class_weight
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -19,17 +20,17 @@ def normalize(img):
 
 N_BANDS = 4
 N_CLASSES = 6  # buildings, roads, trees, crops and water
-CLASS_WEIGHTS = [0.2, 0.3, 0.1, 0.1, 0.3, 0.2]
+CLASS_WEIGHTS = [0.3, 0.3, 0.3, 0.3, 0.3, 0.3]
 #N_EPOCHS = 150
 #N_EPOCHS = 50
 N_EPOCHS = 10
 
 UPCONV = True
 PATCH_SZ = 160   # should divide by 16
-BATCH_SIZE = 150
+BATCH_SIZE = 200
 #TRAIN_SZ = 4000  # train size
 TRAIN_SZ = 2000
-VAL_SZ = 1000    # validation size
+VAL_SZ = 500    # validation size
 #image_path = './data/mband/{}.tif'
 #mask_path = './data/gt_mband/{}.tif'
 image_path = './data/planet_training/img/'
@@ -78,7 +79,10 @@ if __name__ == '__main__':
     print("start train net")
     x_train, y_train = get_patches(X_DICT_TRAIN, Y_DICT_TRAIN, n_patches=TRAIN_SZ, sz=PATCH_SZ)
     x_val, y_val = get_patches(X_DICT_VALIDATION, Y_DICT_VALIDATION, n_patches=VAL_SZ, sz=PATCH_SZ)
+    #attempt setting class weights programatically
+#    auto_class_weights = class_weight.compute_class_weight('balanced', np.unique(y_train), y_train)
     model = get_model()
+    
     if os.path.isfile(weights_path):
         model.load_weights(weights_path)
     #model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_weights_only=True, save_best_only=True)
