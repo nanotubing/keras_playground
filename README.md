@@ -1,7 +1,7 @@
 # Keras and Tensorflow for creating a classified map
 We are developing a pipeline using Python, Keras, and Tensorflow to classify satellite images from [Planet](https://www.planet.com). This work was performed with the [Remote Sensing and Sustainability Lab](http://rsensus.org/en/). This served as the Capstone Project of my [Professional Science Master's in GIS](https://bulletin.temple.edu/graduate/scd/cla/geographic-information-systems-psm/) at Temple University.
 
-The full report of this work is found in two parts on [my portfolio](https://claudeschrader.com). Thanks to Temple University's [Remote Sensing and Sustainability Lab](http://rsensus.org/en/) and [reachsumit](https://github.com/reachsumit/deep-unet-for-satellite-image-segmentation).  
+The full report of this work is found in two parts on [my portfolio](https://claudeschrader.com). Thanks to Temple University's [Remote Sensing and Sustainability Lab](http://rsensus.org/en/) and [reachsumit](https://github.com/reachsumit/deep-unet-for-satellite-image-segmentation), who provided a fantastic unet example designed for performing image segmentation on satellite imagery.  
 [Part 1](https://claudeschrader.com/howto-keras-image-segmentation/)  
 [Part 2](https://claudeschrader.com/keras-deeplearning-mapping/)
 
@@ -12,5 +12,3 @@ The full report of this work is found in two parts on [my portfolio](https://cla
 * gen_patches.py and unet_model.py are called by the two scripts above. It is not necessary to call these directly.
 
 * the tools directory contains a number of smaller utility scripts used in this research
-
-This code is based on a fantastic [unet example](https://github.com/reachsumit/deep-unet-for-satellite-image-segmentation) designed for performing image segmentation on satellite imagery. Thanks to @reachsumit 
